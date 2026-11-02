@@ -1,6 +1,6 @@
 const OWNER_WHATSAPP_NUMBER = "919876543210";
 
-// 1. Master Products Catalog
+// 1. Master Products Catalog (All paths updated to images/)
 const defaultProducts = [
     { id: 101, name: "Fresh Tomatoes", category: "vegetables", price: 40, costPrice: 25, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
     { id: 102, name: "Organic Mangoes", category: "fruits", price: 120, costPrice: 80, unit: "kg", image: "images/mango.jpg", organic: true, stock: 0, isPublished: true },
@@ -45,6 +45,20 @@ function getValidImage(imgSrc) {
         return imgSrc.trim();
     }
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
+}
+
+function getCurrentPageCategory() {
+    let path = window.location.pathname.toLowerCase();
+    if (path.includes('fruits')) return 'fruits';
+    if (path.includes('vegetables')) return 'vegetables';
+    if (path.includes('grains')) return 'grains';
+    if (path.includes('pulses')) return 'pulses';
+    return 'all';
+}
+
+function refreshCurrentPageGrid() {
+    let category = getCurrentPageCategory();
+    renderCategoryPageProducts(category);
 }
 
 // 2. Render Products Grid
@@ -237,6 +251,27 @@ function updateCartUI() {
     injectDeliveryAndCheckout();
 }
 
+function toggleCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    const overlay = document.getElementById('cart-overlay');
+    if (sidebar) sidebar.classList.toggle('active');
+    if (overlay) overlay.classList.toggle('active');
+}
+
+function openCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    const overlay = document.getElementById('cart-overlay');
+    if (sidebar) sidebar.classList.add('active');
+    if (overlay) overlay.classList.add('active');
+}
+
+function clearCartCompletely() {
+    cart = [];
+    saveCart();
+    updateCartUI();
+    refreshCurrentPageGrid();
+}
+
 // 4. Free Delivery Bar & Checkout Options Injection
 function injectDeliveryAndCheckout() {
     const cartSidebar = document.getElementById('cart-sidebar');
@@ -306,8 +341,6 @@ function injectDeliveryAndCheckout() {
             </div>
             <button style="background:#2d6a4f; color:#fff; border:none; width:100%; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer; margin-bottom:6px;" onclick="placeDirectOrder()">🛍️ Place Order Direct</button>
             <button style="background:#25d366; color:#fff; border:none; width:100%; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer; margin-bottom:6px;" onclick="orderViaWhatsApp()">💬 Order via WhatsApp</button>
-            <button style="background:#0284c7; color:#fff; border:none; width:100%; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer; margin-bottom:6px;" onclick="downloadPDFBill()">📄 Print / Download PDF Bill</button>
-            <button style="background:#6b7280; color:#fff; border:none; width:100%; padding:8px; border-radius:5px; font-size:12px; font-weight:bold; cursor:pointer;" onclick="openOrderHistoryModal()">📜 My Past Orders</button>
         `;
     }
 }
@@ -374,4 +407,15 @@ function orderViaWhatsApp() {
         total += itemTotal;
         message += `- ${item.name} (${item.quantity} x ₹${item.price}) = ₹${itemTotal}%0A`;
     });
-    message +=
+    message += `%0A*Total Amount:* ₹${total}`;
+
+    window.open(`https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${message}`, '_blank');
+    clearCartCompletely();
+}
+
+// 6. Init execution on Page Load
+document.addEventListener("DOMContentLoaded", function () {
+    initProducts();
+    updateCartUI();
+    refreshCurrentPageGrid();
+});
