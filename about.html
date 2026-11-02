@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Sasya Farmer Market</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- 1. Header Navbar -->
+    <nav class="navbar">
+        <div class="logo-container" onclick="window.location.href='index.html'">
+            <div class="logo">🌿 Sasya</div>
+            <div class="sub-logo">Farmer Market</div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="fruits.html">Fruits</a></li>
+            <li><a href="vegetables.html">Vegetables</a></li>
+            <li><a href="grains.html">Grains</a></li>
+            <li><a href="pulses.html">Pulses</a></li>
+            <li><a href="about.html" class="active">About Us</a></li>
+            <li><a href="farmer-portal.html" style="color: #facc15; font-weight: bold;">🧑‍🌾 Farmer Portal</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <!-- Search Box -->
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search fresh produce...">
+            </div>
+
+            <!-- Cart Button -->
+            <div class="icon-btn cart-btn" onclick="openCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cart-count" class="cart-badge">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. About Us Main Content -->
+    <section class="about-section" style="padding: 50px 20px; max-width: 1100px; margin: 0 auto; line-height: 1.8;">
+        
+        <!-- Header Title -->
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: #166534; font-size: 36px; margin-bottom: 10px;">మా గురించి | About Sasya Farmer Market</h1>
+            <p style="color: #4b5563; font-size: 18px; font-weight: 500;">
+                రైతుల నుండి నేరుగా... మీ ఇంటికి తాజా మరియు స్వచ్ఛమైన ఆహారం! 🌿<br>
+                <span style="font-size: 16px; color: #6b7280;">Directly from farmers... Fresh & chemical-free produce straight to your doorstep!</span>
+            </p>
+        </div>
+
+        <!-- Our Story Section -->
+        <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: center; margin-bottom: 50px;">
+            <div style="flex: 1; min-width: 300px;">
+                <h2 style="color: #15803d; font-size: 26px; margin-bottom: 15px;">🌱 మా ప్రయాణం (Our Story)</h2>
+                
+                <p style="color: #374151; font-size: 16px; margin-bottom: 12px;">
+                    <strong>సస్య ఫార్మర్ మార్కెట్ (Sasya Farmer Market)</strong> అనేది తిరుపతి పట్టణంలోని ప్రజలకు రసాయనాలు లేని తాజా కూరగాయలు, పండ్లు, పప్పుధాన్యాలు మరియు గ్రెయిన్స్ అందించడానికి ప్రారంభించబడిన ప్రత్యేకమైన వేదిక.
+                </p>
+                <p style="color: #4b5563; font-size: 15px; margin-bottom: 15px; font-style: italic;">
+                    <strong>Sasya Farmer Market</strong> is a dedicated platform initiated to provide chemical-free, fresh vegetables, fruits, pulses, and grains to the people of Tirupati town.
+                </p>
+
+                <p style="color: #374151; font-size: 16px; margin-bottom: 12px;">
+                    మేము నేరుగా స్థానిక రైతుల వద్ద నుండి పంటలను సేకరించి, ఎలాంటి దళారులు లేకుండా నేరుగా వినియోగదారుల ఇళ్లకు డోర్ డెలివరీ చేస్తాము.
+                </p>
+                <p style="color: #4b5563; font-size: 15px; font-style: italic;">
+                    We source produce directly from local farmers without any middlemen and deliver it directly to consumers' homes.
+                </p>
+            </div>
+            
+            <div style="flex: 1; min-width: 300px; text-align: center;">
+                <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=600&q=80" alt="Sasya Organic Farm" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+
+        <!-- Mission & Vision Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px;">
+            
+            <!-- Mission Card -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 25px; border-radius: 12px;">
+                <h3 style="color: #166534; font-size: 22px; margin-bottom: 10px;">🎯 మా లక్ష్యం (Our Mission)</h3>
+                <p style="color: #374151; font-size: 15px; margin-bottom: 8px;">
+                    ప్రతి ఇంట ఆరోగ్యాన్ని పెంపొందించడానికి 100% ఆర్గానిక్ మరియు ఫామ్-ఫ్రెష్ ఉత్పత్తులను వేగంగా డోర్ డెలివరీ చేయడం.
+                </p>
+                <p style="color: #4b5563; font-size: 14px; font-style: italic;">
+                    To promote healthy living in every household by delivering 100% organic and farm-fresh produce swiftly to your doorstep.
+                </p>
+            </div>
+
+            <!-- Vision Card -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 25px; border-radius: 12px;">
+                <h3 style="color: #166534; font-size: 22px; margin-bottom: 10px;">🌟 మా విజన్ (Our Vision)</h3>
+                <p style="color: #374151; font-size: 15px; margin-bottom: 8px;">
+                    తిరుపతి టౌన్‌లో అత్యంత నమ్మకమైన ఫామ్-టు-టేబుల్ (Farm-to-Table) ప్లాట్‌ఫారమ్‌గా ఎదగడం మరియు రైతులకు సరైన గిట్టుబాటు ధర అందించడం.
+                </p>
+                <p style="color: #4b5563; font-size: 14px; font-style: italic;">
+                    To become the most trusted Farm-to-Table platform in Tirupati town while ensuring fair prices for local farmers.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- 3. Footer Section with Dynamic Social Links -->
+    <footer style="background-color: #0d5c2e; color: white; padding: 40px 20px 20px 20px; font-family: sans-serif; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px;">
+            
+            <!-- Column 1: Brand Info -->
+            <div>
+                <h3 style="color: #4ade80; display: flex; align-items: center; gap: 8px; margin-top: 0; font-size: 18px;">
+                    🌱 Sasya Farmer Market
+                </h3>
+                <p style="font-size: 14px; color: #e2e8f0; line-height: 1.5; margin: 0;">
+                    Bringing fresh, organic, and pesticide-free fruits, vegetables, grains, and pulses directly from local farmers to your doorstep.
+                </p>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div>
+                <h4 style="color: #ffffff; margin-top: 0; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #16a34a; display: inline-block; padding-bottom: 4px;">Quick Links</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 2;">
+                    <li><a href="index.html" style="color: #e2e8f0; text-decoration: none;">Home</a></li>
+                    <li><a href="fruits.html" style="color: #e2e8f0; text-decoration: none;">Fruits</a></li>
+                    <li><a href="vegetables.html" style="color: #e2e8f0; text-decoration: none;">Vegetables</a></li>
+                    <li><a href="grains.html" style="color: #e2e8f0; text-decoration: none;">Grains</a></li>
+                    <li><a href="pulses.html" style="color: #e2e8f0; text-decoration: none;">Pulses</a></li>
+                    <li><a href="about.html" style="color: #e2e8f0; text-decoration: none;">About Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Contact Us -->
+            <div>
+                <h4 style="color: #ffffff; margin-top: 0; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #16a34a; display: inline-block; padding-bottom: 4px;">Contact Us</h4>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">📍 Tirupati Town, Andhra Pradesh</p>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">📞 <span id="footer-phone-text">+91 8977881224</span></p>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">✉️ shanmugam75@gmail.com</p>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">✉️ support@sasyafarmer.com</p>
+            </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.2); max-width: 1200px; margin: 20px auto;">
+
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 13px; color: #cbd5e1;">
+            <p style="margin: 0 0 15px 0;">© 2026 Sasya Farmer Market. All Rights Reserved. Crafted with fresh organic love 💚</p>
+            <div id="footer-social-container"></div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=4.0"></script>
+</body>
+</html>

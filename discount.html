@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasya Discount & Offers Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .panel-container { max-width: 700px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #1b4332; }
+        .form-group select, .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        .price-info-box { background: #e8f5e9; padding: 10px; border-radius: 5px; margin-bottom: 15px; color: #1b4332; font-weight: bold; display: none; }
+        .btn-discount { background: #2d6a4f; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; font-weight: bold; }
+        .btn-discount:hover { background: #1b4332; }
+        .nav-links-back { display: inline-block; margin-top: 15px; color: #2d6a4f; font-weight: bold; text-decoration: none; }
+        
+        .deal-option-card {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .deal-option-card input[type="checkbox"] { width: auto; cursor: pointer; transform: scale(1.2); }
+        .deal-option-card label { margin: 0; cursor: pointer; color: #b78103; font-weight: bold; }
+
+        .compact-backup-card {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e9ecef;
+        }
+        .backup-title { font-weight: bold; color: #2d6a4f; font-size: 14px; }
+        .backup-btn-group { display: flex; gap: 8px; }
+        .btn-compact { padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; }
+        .btn-export { background: #2d6a4f; color: white; }
+        .btn-import { background: #17a2b8; color: white; display: inline-block; }
+        .reset-btn-inline { background: #ff9800; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="panel-container">
+        <h2>🏷️ Sasya - Smart Discount Manager 
+            <button type="button" class="reset-btn-inline" onclick="forceReloadProducts()">🔄 Reload Products</button>
+        </h2>
+        <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+
+        <form id="discount-form" onsubmit="saveDiscount(event)">
+            <div class="form-group">
+                <label>Select Product for Discount *</label>
+                <select id="discount-product-select" onchange="onProductSelect()" required>
+                    <option value="">-- Loading Products... --</option>
+                </select>
+            </div>
+
+            <div id="price-info-box" class="price-info-box">
+                Original Price: ₹<span id="original-price-display">0</span>
+            </div>
+
+            <div class="form-group">
+                <label>Discount Percentage (%)</label>
+                <input type="number" id="discount-percent" min="1" max="99" placeholder="e.g. 20" oninput="calcFromPercent()">
+            </div>
+
+            <div class="form-group">
+                <label>Discounted Offer Price (₹)</label>
+                <input type="number" id="discount-price" placeholder="e.g. 80" oninput="calcFromPrice()">
+            </div>
+
+            <div class="form-group">
+                <label>Offer Tag / Message (Optional)</label>
+                <input type="text" id="discount-tag" placeholder="e.g. 20% OFF / Special Deal">
+            </div>
+
+            <div class="deal-option-card">
+                <input type="checkbox" id="is-deal-of-day">
+                <label for="is-deal-of-day">⚡ Make this item "Deal of the Day" (Flash Sale Banner)</label>
+            </div>
+
+            <button type="submit" class="btn-discount">Apply Smart Discount</button>
+        </form>
+
+        <!-- ⏱️ Flash Sale Timer Duration Settings Box -->
+        <div style="background: #fff8e1; padding: 15px; border-radius: 8px; border: 1px solid #ffe082; margin: 25px 0 15px 0;">
+            <h4 style="margin: 0 0 8px 0; color: #b78103; font-size: 14px;">⏱️ Flash Sale Timer Duration Settings</h4>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="flash-hours-input" placeholder="Hours (e.g. 4, 12, 24)" min="1" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+                <button type="button" onclick="updateFlashTimer()" style="background: #b78103; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">Update Timer</button>
+            </div>
+        </div>
+
+        <hr style="margin: 20px 0 15px 0; border: 0; border-top: 1px solid #eee;">
+        <h3 style="color: #1b4332; font-size: 16px; margin-bottom: 10px;">📋 Active Discounts & Flash Sale Status</h3>
+        <div id="active-discounts-list"></div>
+
+        <div class="compact-backup-card">
+            <span class="backup-title">💾 Data Backup:</span>
+            <div class="backup-btn-group">
+                <button type="button" class="btn-compact btn-export" onclick="downloadBackup()">📥 Export</button>
+                <label class="btn-compact btn-import">
+                    📤 Import
+                    <input type="file" accept=".json" onchange="restoreBackup(event)" style="display: none;">
+                </label>
+            </div>
+        </div>
+
+        <br>
+        <a href="admin.html" class="nav-links-back">← Back to Admin Panel</a> | 
+        <a href="index.html" class="nav-links-back">Go to Storefront →</a>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const initialProductsList = [
+            { id: 101, name: "Fresh Tomatoes", category: "vegetables", price: 40, unit: "kg", image: "image/tomato.jpg" },
+            { id: 102, name: "Organic Mangoes", category: "fruits", price: 120, unit: "kg", image: "image/mango.jpg" },
+            { id: 103, name: "Premium Rice 5kg", category: "grains", price: 350, unit: "pack", image: "image/rice.jpg" },
+            { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, unit: "kg", image: "image/toordal.jpg" },
+            { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, unit: "kg", image: "image/greengram.jpg" },
+            { id: 106, name: "Fresh Banana", category: "fruits", price: 60, unit: "dozen", image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&auto=format&fit=crop" },
+            { id: 107, name: "Red Apples", category: "fruits", price: 180, unit: "kg", image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&auto=format&fit=crop" }
+        ];
+
+        let activeProductsList = [];
+        let selectedProductPrice = 0;
+
+        function initializeAndLoadDropdown() {
+            try {
+                let saved = localStorage.getItem('sasya_all_products');
+                let parsed = saved ? JSON.parse(saved) : [];
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    activeProductsList = parsed;
+                } else {
+                    activeProductsList = initialProductsList;
+                    localStorage.setItem('sasya_all_products', JSON.stringify(initialProductsList));
+                }
+            } catch (e) {
+                activeProductsList = initialProductsList;
+            }
+
+            const select = document.getElementById('discount-product-select');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">-- Select Product for Discount --</option>';
+            
+            activeProductsList.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.name} - (₹${p.price}/${p.unit || 'kg'})</option>`;
+            });
+        }
+
+        function forceReloadProducts() {
+            localStorage.setItem('sasya_all_products', JSON.stringify(initialProductsList));
+            initializeAndLoadDropdown();
+            alert("✅ Products Reloaded Successfully!");
+        }
+
+        function onProductSelect() {
+            const prodId = document.getElementById('discount-product-select').value;
+            const infoBox = document.getElementById('price-info-box');
+            const priceDisplay = document.getElementById('original-price-display');
+
+            const product = activeProductsList.find(p => p.id == prodId);
+            if (product) {
+                selectedProductPrice = Number(product.price);
+                priceDisplay.innerText = selectedProductPrice;
+                infoBox.style.display = 'block';
+            } else {
+                selectedProductPrice = 0;
+                infoBox.style.display = 'none';
+            }
+
+            document.getElementById('discount-percent').value = '';
+            document.getElementById('discount-price').value = '';
+            document.getElementById('discount-tag').value = '';
+            document.getElementById('is-deal-of-day').checked = false;
+        }
+
+        function calcFromPercent() {
+            if (!selectedProductPrice) return;
+            const percentVal = Number(document.getElementById('discount-percent').value);
+            if (percentVal > 0 && percentVal < 100) {
+                const calculatedPrice = selectedProductPrice - (selectedProductPrice * percentVal / 100);
+                document.getElementById('discount-price').value = Math.round(calculatedPrice);
+            } else if (!percentVal) {
+                document.getElementById('discount-price').value = '';
+            }
+        }
+
+        function calcFromPrice() {
+            if (!selectedProductPrice) return;
+            const offerPriceVal = Number(document.getElementById('discount-price').value);
+            if (offerPriceVal > 0 && offerPriceVal < selectedProductPrice) {
+                const calculatedPercent = ((selectedProductPrice - offerPriceVal) / selectedProductPrice) * 100;
+                document.getElementById('discount-percent').value = Math.round(calculatedPercent);
+            } else if (!offerPriceVal) {
+                document.getElementById('discount-percent').value = '';
+            }
+        }
+
+        function saveDiscount(event) {
+            event.preventDefault();
+            const prodId = document.getElementById('discount-product-select').value;
+            const offerPrice = Number(document.getElementById('discount-price').value);
+            const percentVal = document.getElementById('discount-percent').value;
+            let offerTag = document.getElementById('discount-tag').value.trim();
+            const isDealOfDay = document.getElementById('is-deal-of-day').checked;
+
+            if (!prodId) {
+                alert("దయచేసి ప్రొడక్ట్‌ను ఎంచుకోండి!");
+                return;
+            }
+
+            if (!offerPrice || offerPrice >= selectedProductPrice) {
+                alert("డిస్కౌంట్ ధర అసలు ధర కన్నా తక్కువగా ఉండాలి!");
+                return;
+            }
+
+            if (!offerTag) {
+                offerTag = percentVal ? `${percentVal}% OFF` : `SPECIAL OFFER`;
+            }
+
+            let discounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
+            
+            discounts[prodId] = {
+                offerPrice: offerPrice,
+                tag: offerTag,
+                isDealOfDay: isDealOfDay
+            };
+
+            localStorage.setItem('sasya_active_discounts', JSON.stringify(discounts));
+            alert('✅ Discount Applied & Saved!');
+            
+            document.getElementById('discount-form').reset();
+            document.getElementById('price-info-box').style.display = 'none';
+            selectedProductPrice = 0;
+
+            renderActiveDiscounts();
+        }
+
+        function updateFlashTimer() {
+            let hours = Number(document.getElementById('flash-hours-input').value);
+            if (!hours || hours <= 0) {
+                alert("దయచేసి గంటల సంఖ్యను (Hours) సరిగ్గా ఎంటర్ చేయండి!");
+                return;
+            }
+            let newEndTime = new Date().getTime() + (hours * 60 * 60 * 1000);
+            localStorage.setItem('sasya_flash_endtime', newEndTime.toString());
+            alert(`✅ ఫ్లాష్ సేల్ టైమర్ విజయవంతంగా ${hours} గంటలకు సెట్ చేయబడింది!`);
+            document.getElementById('flash-hours-input').value = '';
+        }
+
+        function renderActiveDiscounts() {
+            const container = document.getElementById('active-discounts-list');
+            if (!container) return;
+
+            let discounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
+            let discountKeys = Object.keys(discounts);
+
+            if (discountKeys.length === 0) {
+                container.innerHTML = '<p style="color:#888; font-size:13px;">ప్రస్తుతం ఏ ఆఫర్లు యాక్టివ్‌గా లేవు.</p>';
+                return;
+            }
+
+            let html = `
+                <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                    <tr style="background:#2d6a4f; color:white;">
+                        <th style="padding:8px;">Product</th>
+                        <th style="padding:8px;">Offer Price</th>
+                        <th style="padding:8px;">Tag</th>
+                        <th style="padding:8px;">Status</th>
+                        <th style="padding:8px;">Action</th>
+                    </tr>
+            `;
+
+            discountKeys.forEach(id => {
+                let p = activeProductsList.find(prod => prod.id == id);
+                let name = p ? p.name : `Product ID: ${id}`;
+                let item = discounts[id];
+                let isDeal = item.isDealOfDay ? '⚡ <strong style="color:#b78103;">Deal of Day</strong>' : 'Standard Offer';
+
+                html += `
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:8px; font-weight:bold;">${name}</td>
+                        <td style="padding:8px; color:#2d6a4f; font-weight:bold;">₹${item.offerPrice}</td>
+                        <td style="padding:8px;"><span style="background:#e8f5e9; color:#1b4332; padding:2px 6px; border-radius:4px;">${item.tag}</span></td>
+                        <td style="padding:8px;">${isDeal}</td>
+                        <td style="padding:8px;">
+                            <button onclick="removeDiscount('${id}')" style="background:#d90429; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</table>`;
+            container.innerHTML = html;
+        }
+
+        function removeDiscount(id) {
+            let discounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
+            delete discounts[id];
+            localStorage.setItem('sasya_active_discounts', JSON.stringify(discounts));
+            renderActiveDiscounts();
+        }
+
+        window.onload = function() {
+            initializeAndLoadDropdown();
+            renderActiveDiscounts();
+        };
+    </script>
+</body>
+</html>

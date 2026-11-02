@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasya Farmer Market</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <nav class="navbar">
+        <div class="logo-container" onclick="window.location.href='index.html'">
+            <div class="logo">🌿 Sasya</div>
+            <div class="sub-logo">Farmer Market</div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="fruits.html">Fruits</a></li>
+            <li><a href="vegetables.html">Vegetables</a></li>
+            <li><a href="grains.html">Grains</a></li>
+            <li><a href="pulses.html">Pulses</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="farmer-portal.html" style="color: #facc15; font-weight: bold;">🧑‍🌾 Farmer Portal</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <!-- Search Box -->
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" onkeyup="searchProducts()" placeholder="Search fresh produce...">
+            </div>
+
+            <!-- Cart Button -->
+            <div class="icon-btn cart-btn" onclick="toggleCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cart-count" class="cart-badge">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🎯 Direct Pure HTML/CSS Top Announcement Offer Bar (Works in Office PC without JS dependency) -->
+    <a href="#offers-section-container" style="display: block !important; text-decoration: none !important; width: 100%;">
+        <div style="background: linear-gradient(90deg, #dc2626, #b91c1c) !important; color: #ffffff !important; text-align: center !important; padding: 12px 15px !important; font-size: 16px !important; font-weight: bold !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer;">
+            🔥 <span style="background: #facc15; color: #000000; padding: 2px 8px; border-radius: 4px; font-size: 13px; margin-right: 6px;">SPECIAL OFFER</span> 🎉 ప్రత్యేక ఆఫర్! అన్ని ఆర్డర్లపై 15% డిస్కౌంట్ పొందండి! ➔
+        </div>
+    </a>
+        
+    <!-- Tirupati Door Delivery Marquee Notice -->
+    <div style="background: linear-gradient(135deg, #fef08a, #fde047); border-bottom: 2px solid #eab308; padding: 10px 0; overflow: hidden; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+        <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop()" onmouseout="this.start()" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 15px; font-weight: bold;">
+            <span style="color: #b45309; margin-right: 30px;">📍 మా షాప్ **తిరుపతి (Tirupati)** లో ఉంది!</span>
+            <span style="color: #1b4332; margin-right: 30px; background: #d1fae5; padding: 4px 12px; border-radius: 6px; border: 1px solid #86efac;">🚚 డోర్ డెలివరీ కేవలం **తిరుపతి టౌన్ (Tirupati Town)** లో మాత్రమే అందుబాటులో ఉంది!</span>
+            <span style="color: #b91c1c; margin-right: 30px;">🌿 స్వచ్ఛమైన మరియు తాజా కూరగాయలు నేరుగా మీ ఇంటికి!</span>
+        </marquee>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-text">
+            <h1>Fresh & Organic Farm Produce</h1>
+            <p>Directly from local farmers to your home at best prices!</p>
+            <a href="#products" class="btn shop-now-btn">Explore Categories</a>
+        </div>
+    </section>
+
+    <!-- Trust Badges Section -->
+    <section class="trust-badges-section">
+        <div class="trust-container">
+            <div class="trust-card">
+                <i class="fa-solid fa-tractor"></i>
+                <div>
+                    <h4>Direct From Farmers</h4>
+                    <p>100% Organic & Fresh</p>
+                </div>
+            </div>
+            <div class="trust-card">
+                <i class="fa-solid fa-bolt"></i>
+                <div>
+                    <h4>Same Day Delivery</h4>
+                    <p>Fast & Safe Door Delivery</p>
+                </div>
+            </div>
+            <div class="trust-card">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <h4>Pesticide Free</h4>
+                    <p>Guaranteed Clean Food</p>
+                </div>
+            </div>
+            <div class="trust-card">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <div>
+                    <h4>Best Prices</h4>
+                    <p>Cash / UPI on Delivery</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Daily Deals / Flash Sale Banner with Countdown & Auto-Slider -->
+    <section class="flash-sale-banner" id="flash-sale-section">
+        <div class="flash-sale-content">
+            <div class="flash-sale-left" style="flex: 1; min-width: 280px; max-width: 600px;">
+                <span class="flash-badge">⚡ DEAL OF THE DAY</span>
+                <div id="deal-product-container" class="deal-product-box" style="margin-top: 8px;">
+                    <!-- Products dynamically rendered -->
+                </div>
+            </div>
+
+            <div class="timer-box">
+                <span>Ends In:</span>
+                <div id="flash-timer">
+                    <span id="timer-hours">04</span>h : 
+                    <span id="timer-mins">30</span>m : 
+                    <span id="timer-secs">00</span>s
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers Section -->
+    <section id="offers-section-container" class="offers-section">
+        <div class="offers-title">🔥 ప్రత్యేక ఆఫర్లు & డిస్కౌంట్లు (Special Offers)</div>
+        <div class="offers-slider-container">
+            <div id="offers-wrapper" class="offers-wrapper">
+                <!-- Offer Cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Products Category Navigation Section -->
+    <section id="products" class="products-section">
+        <h2 class="section-title">Our Fresh Products</h2>
+        
+        <!-- Category Cards Grid -->
+        <div id="category-grid-container" class="category-grid">
+            <a href="fruits.html" class="category-card">
+                <div class="card-img-box">
+                    <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=500&q=80" alt="Fruits">
+                </div>
+                <h3>🍎 Fresh Fruits</h3>
+                <p>Sweet & juicy seasonal fruits</p>
+            </a>
+
+            <a href="vegetables.html" class="category-card">
+                <div class="card-img-box">
+                    <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=500&q=80" alt="Vegetables">
+                </div>
+                <h3>🥦 Vegetables</h3>
+                <p>Farm fresh organic veg</p>
+            </a>
+
+            <a href="grains.html" class="category-card">
+                <div class="card-img-box">
+                    <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=500&q=80" alt="Grains">
+                </div>
+                <h3>🌾 Quality Grains</h3>
+                <p>Pure & unpolished grains</p>
+            </a>
+
+            <a href="pulses.html" class="category-card">
+                <div class="card-img-box">
+                    <img src="https://images.unsplash.com/photo-1585996177116-29173a1104e6?auto=format&fit=crop&w=500&q=80" alt="Pulses">
+                </div>
+                <h3>🫘 Healthy Pulses</h3>
+                <p>Nutritious organic pulses</p>
+            </a>
+        </div>
+
+        <!-- Dynamic Product Container for Search/All Products -->
+        <div id="product-grid" class="product-grid" style="margin-top: 25px;"></div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>🛒 Your Shopping Cart</h3>
+            <button class="close-cart-btn" onclick="toggleCart()">✖</button>
+        </div>
+        <div id="cart-items-container" class="cart-body"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total Amount:</span>
+                <span id="cart-total-price">₹0</span>
+            </div>
+            <button class="btn checkout-btn" onclick="placeDirectOrder()">Proceed to Checkout</button>
+        </div>
+    </div>
+    <div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>🌿 Sasya Farmer Market</h3>
+                <p>Bringing fresh, organic, and pesticide-free fruits, vegetables, grains, and pulses directly from local farmers to your doorstep.</p>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="fruits.html">Fruits</a></li>
+                    <li><a href="vegetables.html">Vegetables</a></li>
+                    <li><a href="grains.html">Grains</a></li>
+                    <li><a href="pulses.html">Pulses</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><i class="fa-solid fa-location-dot"></i> Tirupati Town, Andhra Pradesh</p>
+                <p><i class="fa-solid fa-phone"></i> +91 8977881224</p>
+                <p><i class="fa-solid fa-envelope"></i> shanmugam75@gmail.com</p>
+                <p><i class="fa-solid fa-envelope"></i> support@sasyafarmer.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sasya Farmer Market. All Rights Reserved. Crafted with fresh organic love 💚</p>
+        </div>
+        
+        <div id="footer-social-container"></div>
+    </footer>
+
+    <!-- Script Integration with Cache-Busting Version -->
+    <script src="script.js?v=100.0"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let grid = document.getElementById('product-grid');
+            if (grid) grid.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

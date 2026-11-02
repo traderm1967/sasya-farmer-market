@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Vegetables - Sasya Farmer Market</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<a id="top-announcement-bar" href="#" style="display:none; text-decoration:none; background:#2d6a4f; color:white; text-align:center; padding:10px; font-weight:bold;">
+    <span id="announcement-text-content"></span>
+</a>
+    
+    <!-- Main Header with Search Bar -->
+    <header style="background: #2d6a4f; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h1 style="margin: 0; font-size: 20px; cursor: pointer;" onclick="window.location.href='index.html'">🌿 Sasya Farmer Market</h1>
+        
+        <!-- Search Box -->
+        <div class="search-box" style="display: flex; align-items: center; background: white; border-radius: 20px; padding: 5px 12px; width: 280px;">
+            <i class="fa-solid fa-magnifying-glass search-icon" style="color: #2d6a4f; margin-right: 8px;"></i>
+            <input type="text" id="search-input" oninput="searchProducts()" placeholder="Search vegetables..." style="border: none; outline: none; width: 100%; font-size: 13px;">
+        </div>
+
+        <div>
+            <button class="cart-btn" onclick="openCart()" style="background: #52b788; color: white; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px;">
+                🛒 Cart (<span id="cart-count">0</span>)
+            </button>
+        </div>
+    </header>
+
+    <!-- Category Navigation Bar -->
+    <nav style="background: #1b4332; padding: 10px 0; overflow-x: auto; white-space: nowrap; text-align: center;">
+        <div style="display: inline-flex; gap: 8px; padding: 0 15px; align-items: center;">
+            <a href="index.html" style="color: white; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 13px; font-weight: 600;">🏠 Home</a>
+            <a href="fruits.html" style="color: white; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 13px; font-weight: 600;">🍎 Fruits</a>
+            <!-- Vegetables Active Button -->
+            <a href="vegetables.html" style="color: white; text-decoration: none; padding: 6px 14px; background: #52b788; border-radius: 20px; font-size: 13px; font-weight: 600;">🥦 Vegetables</a>
+            <a href="grains.html" style="color: white; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 13px; font-weight: 600;">🌾 Grains</a>
+            <a href="pulses.html" style="color: white; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 13px; font-weight: 600;">🫘 Pulses</a>
+            
+            <a href="about.html" style="color: white; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 13px; font-weight: 600;"> About Us</a>
+            
+            <a href="farmer-portal.html" style="color: #facc15; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 13px; font-weight: bold;">🧑‍🌾 Farmer Portal</a>
+        </div>
+    </nav>
+
+    <!-- Page Title -->
+    <div style="text-align: center; padding: 20px 10px; background: #e8f5e9;">
+        <h2 style="color: #1b4332; margin: 0;">🥦 Fresh Vegetables</h2>
+        <p style="color: #40916c; margin: 5px 0 0 0; font-size: 14px;">రైతుల వద్ద నుండి నేరుగా తాజా కూరగాయలు</p>
+    </div>
+
+    <!-- Filter & Sort Bar -->
+    <div class="filter-sort-bar" style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 15px auto; padding: 10px 15px; background: #ffffff; border-radius: 8px; border: 1px solid #86efac; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <label for="sort-select" style="font-size: 13px; font-weight: bold; color: #14532d;">↕️ Sort By:</label>
+            <select id="sort-select" onchange="applyFilterAndSort()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #86efac; font-size: 12px; cursor: pointer;">
+                <option value="default">Default</option>
+                <option value="low-to-high">Price: Low to High</option>
+                <option value="high-to-low">Price: High to Low</option>
+                <option value="a-to-z">Name: A to Z</option>
+                <option value="z-to-a">Name: Z to A</option>
+            </select>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <label style="font-size: 13px; font-weight: bold; color: #14532d; cursor: pointer;">
+                <input type="checkbox" id="organic-filter" onchange="applyFilterAndSort()"> 🌿 Organic Only
+            </label>
+        </div>
+    </div>
+
+    <!-- Product Grid Placeholder -->
+    <main style="max-width: 1100px; margin: 0 auto; padding: 0 15px; min-height: 300px;">
+        <div id="product-grid"></div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-overlay" onclick="closeCart()" class="cart-overlay"></div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>🛒 Your Cart</h3>
+            <button onclick="closeCart()" class="close-cart-btn" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+        </div>
+        <div id="cart-items-container" class="cart-body"></div>
+        <div class="cart-footer"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background-color: #0d5c2e; color: white; padding: 40px 20px 20px 20px; font-family: sans-serif; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px;">
+            <div>
+                <h3 style="color: #4ade80; display: flex; align-items: center; gap: 8px; margin-top: 0; font-size: 18px;">🌱 Sasya Farmer Market</h3>
+                <p style="font-size: 14px; color: #e2e8f0; line-height: 1.5; margin: 0;">Bringing fresh, organic, and pesticide-free fruits, vegetables, grains, and pulses directly from local farmers to your doorstep.</p>
+            </div>
+            <div>
+                <h4 style="color: #ffffff; margin-top: 0; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #16a34a; display: inline-block; padding-bottom: 4px;">Quick Links</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 2;">
+                    <li><a href="index.html" style="color: #e2e8f0; text-decoration: none;">Home</a></li>
+                    <li><a href="fruits.html" style="color: #e2e8f0; text-decoration: none;">Fruits</a></li>
+                    <li><a href="vegetables.html" style="color: #e2e8f0; text-decoration: none;">Vegetables</a></li>
+                    <li><a href="grains.html" style="color: #e2e8f0; text-decoration: none;">Grains</a></li>
+                    <li><a href="pulses.html" style="color: #e2e8f0; text-decoration: none;">Pulses</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #ffffff; margin-top: 0; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #16a34a; display: inline-block; padding-bottom: 4px;">Contact Us</h4>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">📍 Tirupati Town, Andhra Pradesh</p>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">📞 <span id="footer-phone-text">+91 8977881224</span></p>
+                <p style="font-size: 14px; color: #e2e8f0; margin: 6px 0;">✉️ shanmugam75@gmail.com</p>
+            </div>
+        </div>
+        <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.2); max-width: 1200px; margin: 20px auto;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; font-size: 13px; color: #cbd5e1;">
+            <p style="margin: 0 0 15px 0;">© 2026 Sasya Farmer Market. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Vegetables కోసం ప్రత్యేక లోడింగ్ స్క్రిప్ట్ -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof renderCategoryPageProducts === "function") {
+                renderCategoryPageProducts("vegetables");
+            }
+        });
+    </script>
+
+    <script src="script.js?v=4.0"></script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasya Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js for Sales Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eaeff2; margin: 0; padding: 20px; color: #333; }
+        .admin-card { max-width: 950px; margin: auto; background: white; padding: 22px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #dcdfe3; }
+        
+        .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+        .brand-title { margin: 0; font-size: 26px; font-weight: 800; color: #1e3a2b; }
+
+        .corner-backup-box { background: #e8f5e9; border: 1px solid #2d6a4f; padding: 6px 10px; border-radius: 8px; text-align: right; }
+        .corner-backup-box h5 { margin: 0 0 5px 0; color: #2d6a4f; font-size: 11px; }
+        .corner-btn-group { display: flex; gap: 5px; }
+        .btn-corner-backup { background-color: #2d6a4f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px; }
+        .btn-corner-restore { background-color: #1e3a8a; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px; }
+
+        .admin-tabs { display: flex; gap: 8px; border-bottom: 2px solid #2d6a4f; margin-top: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background: #e2e8f0; color: #475569; border: none; padding: 10px 18px; border-radius: 6px 6px 0 0; font-weight: bold; cursor: pointer; font-size: 13.5px; }
+        .tab-btn.active { background: #2d6a4f; color: white; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .stats-container { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card { flex: 1; min-width: 110px; background: #f8fafc; border-left: 4px solid #2d6a4f; padding: 8px 12px; border-radius: 6px; }
+        .stat-card.total { border-left-color: #2d6a4f; background: #e8f5e9; }
+        .stat-card h4 { margin: 0; font-size: 11px; color: #64748b; }
+        .stat-card p { margin: 3px 0 0 0; font-size: 20px; font-weight: bold; }
+
+        .manage-bar-section { background: #eef2f5; padding: 14px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #d1d5db; }
+        .manage-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+        .manage-row select { flex: 1; padding: 9px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 6px; min-width: 200px; background: white; }
+        
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #334155; font-size: 13px; }
+        .form-group input, .form-group select { width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 13px; }
+
+        .btn-submit { background: #2d6a4f; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 15px; width: 100%; font-weight: bold; }
+        .btn-cancel { background: #64748b; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 6px; font-weight: bold; display: none; }
+
+        .badge-published { background: #d1fae5; color: #065f46; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-unpublished { background: #fef3c7; color: #92400e; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+
+        .revenue-grid { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .rev-card { flex: 1; min-width: 200px; padding: 15px; border-radius: 8px; color: white; }
+        .rev-card.sales { background: linear-gradient(135deg, #0284c7, #0369a1); }
+        .rev-card.cost { background: linear-gradient(135deg, #e11d48, #be123c); }
+        .rev-card.profit { background: linear-gradient(135deg, #16a34a, #15803d); }
+        .rev-card h3 { margin: 0; font-size: 13px; opacity: 0.9; }
+        .rev-card p { margin: 5px 0 0 0; font-size: 24px; font-weight: bold; }
+    </style>
+</head>
+<body onload="refreshUI()">
+
+    <div class="admin-card">
+        <div class="header-top">
+            <div>
+                <h1 class="brand-title">🌿 Sasya Admin Panel</h1>
+            </div>
+
+            <div class="corner-backup-box">
+                <h5>💾 Data Backup</h5>
+                <div class="corner-btn-group">
+                    <button type="button" class="btn-corner-backup" onclick="exportDataBackup()">📥 Backup</button>
+                    <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importDataBackup(event)">
+                    <button type="button" class="btn-corner-restore" onclick="document.getElementById('import-file-input').click()">📤 Restore</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('products-tab', this)">📦 Products & Store</button>
+            <button class="tab-btn" onclick="switchTab('social-links-tab', this)">🔗 Social Links</button>
+            <button class="tab-btn" onclick="switchTab('announcement-tab', this)">🎯 Announcement Bar</button>
+            <button class="tab-btn" onclick="switchTab('farmer-requests-tab', this)">🧑‍🌾 Farmer Requests</button>
+            <button class="tab-btn" onclick="switchTab('quick-stock-tab', this)">📊 Pricing & Profit</button>
+            <button class="tab-btn" onclick="switchTab('sales-report-tab', this)">📈 Sales Report</button>
+        </div>
+
+        <!-- TAB 1: Products & Store -->
+        <div id="products-tab" class="tab-content active">
+            <div class="stats-container">
+                <div class="stat-card total"><h4>📦 Total Products</h4><p id="stat-total">0</p></div>
+                <div class="stat-card"><h4>🥦 Vegetables</h4><p id="stat-veg">0</p></div>
+                <div class="stat-card"><h4>🍎 Fruits</h4><p id="stat-fruits">0</p></div>
+                <div class="stat-card"><h4>🌾 Grains</h4><p id="stat-grains">0</p></div>
+                <div class="stat-card"><h4>🫘 Pulses</h4><p id="stat-pulses">0</p></div>
+            </div>
+
+            <div class="manage-bar-section">
+                <label style="font-weight:bold; color:#166534;">🎯 Select Product to Edit Selling Price or Delete:</label>
+                <div class="manage-row">
+                    <input type="text" id="admin-search-input" placeholder="🔍 Search product..." oninput="filterAdminDropdown()" style="padding:8px; width:40%;">
+                    <select id="select-product-dropdown"></select>
+                    <button type="button" onclick="handleDropdownEdit()" style="background:#f59e0b; padding:9px 15px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">✏️ Edit</button>
+                    <button type="button" onclick="handleDropdownDelete()" style="background:#ef4444; color:white; padding:9px 15px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">🗑 Delete</button>
+                </div>
+            </div>
+
+            <h3 id="form-title" style="color: #1b4332;">➕ Add / Edit Product</h3>
+            <form id="admin-product-form" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="editing-id" value="">
+
+                <div class="form-group">
+                    <label>Product Name *</label>
+                    <input type="text" id="p-name" required placeholder="e.g. Fresh Tomatoes">
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="p-category">
+                        <option value="vegetables">Vegetables</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="grains">Grains</option>
+                        <option value="pulses">Pulses</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Farmer Price / Buy Price (₹) [Cost]</label>
+                        <input type="number" id="p-cost-price" placeholder="e.g. 30">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Selling Price (₹) [Website Price] *</label>
+                        <input type="number" id="p-price" required placeholder="e.g. 45">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Unit *</label>
+                        <input type="text" id="p-unit" required placeholder="e.g. kg">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Stock Quantity *</label>
+                        <input type="number" id="p-stock" value="10" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Image URL / Path</label>
+                    <input type="text" id="p-image" placeholder="e.g. image/tomato.jpg">
+                </div>
+
+                <div class="form-group" style="background:#f0fdf4; padding:10px; border-radius:6px; border:1px solid #bbf7d0;">
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                        <input type="checkbox" id="p-published" checked style="width:auto;"> 
+                        <span>🌐 Display on Website / Storefront</span>
+                    </label>
+                </div>
+                
+                <button type="submit" id="submit-btn" class="btn-submit">Save Product Details</button>
+                <button type="button" id="cancel-btn" class="btn-cancel" onclick="resetForm()">Cancel Edit</button>
+            </form>
+        </div>
+
+        <!-- TAB 2: Social Media Links -->
+        <div id="social-links-tab" class="tab-content">
+            <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; border: 1px solid #86efac;">
+                <h3 style="color: #1b4332; margin-top:0;">🔗 Social Media & Contact Link Manager</h3>
+                
+                <div class="form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="text" id="admin-whatsapp" placeholder="918977881224">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number / Call Us</label>
+                    <input type="text" id="admin-phone" placeholder="8977881224">
+                </div>
+                <div class="form-group">
+                    <label>Instagram Page Link</label>
+                    <input type="text" id="admin-instagram" placeholder="https://instagram.com/yourpage">
+                </div>
+                <div class="form-group">
+                    <label>Facebook Page Link</label>
+                    <input type="text" id="admin-facebook" placeholder="https://facebook.com/yourpage">
+                </div>
+
+                <button type="button" onclick="saveSocialLinks()" class="btn-submit">💾 Save Social Links</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: Announcement Bar Manager -->
+        <div id="announcement-tab" class="tab-content">
+            <div style="background: #fffbeb; padding: 20px; border-radius: 8px; border: 1px solid #fde68a;">
+                <h3 style="color: #b45309; margin-top:0;">🎯 Today's Special / Top Banner Announcement</h3>
+                <p style="font-size: 13px; color: #555;">ఇక్కడ మీరు రాసే ప్రకటన వెబ్‌సైట్ పైభాగంలో బ్యానర్ లాగా కనిపిస్తుంది.</p>
+                
+                <div class="form-group">
+                    <label>అనౌన్స్‌మెంట్ టెక్స్ట్ (Announcement Text)</label>
+                    <input type="text" id="admin-announcement-text" placeholder="ఉదా: 🌿 Today's Special: Fresh Organic Mangoes!">
+                </div>
+
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>క్లిక్ చేసినప్పుడు వెళ్లాల్సిన పేజీ లింక్</label>
+                    <input type="text" id="admin-announcement-link" placeholder="ఉదా: vegetables.html">
+                </div>
+
+                <div class="form-group">
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                        <input type="checkbox" id="admin-announcement-active" checked style="width:auto;"> 
+                        <span>📢 Show Banner on Website</span>
+                    </label>
+                </div>
+
+                <button type="button" onclick="saveAnnouncementBar()" class="btn-submit" style="background: #d97706;">💾 Save Announcement</button>
+            </div>
+        </div>
+
+        <!-- TAB 4: Farmer Requests -->
+        <div id="farmer-requests-tab" class="tab-content">
+            <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #86efac;">
+                <h3 style="color: #1b4332; margin-top:0;">🧑‍🌾 Pending Farmer Requests (Approve to Stock / Reject)</h3>
+                <div id="admin-farmer-requests"></div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                <h3 style="color: #1b4332; margin-top: 0;">📂 Permanent Farmers History Directory</h3>
+                <div id="admin-all-farmers-list" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 5: Pricing & Profit Manager -->
+        <div id="quick-stock-tab" class="tab-content">
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                <h3 style="color: #1b4332; margin-top: 0;">📊 Pricing, Profit & Stock Manager</h3>
+                <p style="font-size:12px; color:#555;">ఇక్కడ అప్రూవ్ అయిన స్టాక్‌కు ప్రైస్ సెట్ చేసి, 'Live' చెక్ బాక్స్ ఆన్ చేస్తేనే వెబ్‌సైట్‌లో కనిపిస్తుంది.</p>
+                <div id="stock-management-list" style="max-height: 450px; overflow-y: auto;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 6: Sales Report -->
+        <div id="sales-report-tab" class="tab-content">
+            <h3 style="color: #1b4332; margin-top: 0;">📈 Sales & Earnings Overview</h3>
+            
+            <div class="revenue-grid">
+                <div class="rev-card sales">
+                    <h3>💵 Total Revenue</h3>
+                    <p id="report-total-revenue">₹0</p>
+                </div>
+                <div class="rev-card cost">
+                    <h3>🌾 Total Cost</h3>
+                    <p id="report-total-cost">₹0</p>
+                </div>
+                <div class="rev-card profit">
+                    <h3>✨ Net Profit</h3>
+                    <p id="report-net-profit">₹0</p>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px;">
+                <h4 style="margin-top:0; color:#334155;">📊 Revenue vs Profit Comparison</h4>
+                <div style="max-height: 280px; position: relative;">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <a href="index.html" style="color:#2d6a4f; font-weight:bold; text-decoration:none;">← Go to Main Storefront</a>
+    </div>
+
+    <script>
+        const initialProducts = [
+            { id: 101, name: "Fresh Tomatoes", category: "vegetables", costPrice: 30, price: 45, unit: "kg", image: "image/tomato.jpg", stock: 15, isPublished: true },
+            { id: 102, name: "Organic Mangoes", category: "fruits", costPrice: 80, price: 120, unit: "kg", image: "image/mango.jpg", stock: 10, isPublished: true }
+        ];
+
+        let products = [];
+        let salesChartInstance = null;
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+
+            if(tabId === 'sales-report-tab') {
+                renderSalesReport();
+            }
+        }
+
+        function loadProducts() {
+            try {
+                const savedData = localStorage.getItem('sasya_all_products');
+                products = savedData ? JSON.parse(savedData) : initialProducts;
+            } catch(e) { products = initialProducts; }
+        }
+
+        function saveData() {
+            try { localStorage.setItem('sasya_all_products', JSON.stringify(products)); } catch(e) {}
+            refreshUI();
+        }
+
+        function saveSocialLinks() {
+            const socialData = {
+                whatsapp: document.getElementById('admin-whatsapp').value.trim() || "918977881224",
+                phone: document.getElementById('admin-phone').value.trim() || "8977881224",
+                instagram: document.getElementById('admin-instagram').value.trim() || "#",
+                facebook: document.getElementById('admin-facebook').value.trim() || "#"
+            };
+            localStorage.setItem('sasya_social_links', JSON.stringify(socialData));
+            alert("✅ సోషల్ మీడియా లింక్‌లు విజయవంతంగా సేవ్ అయ్యాయి!");
+        }
+
+        function loadSocialLinksInput() {
+            let savedData = JSON.parse(localStorage.getItem('sasya_social_links')) || {};
+            if(document.getElementById('admin-whatsapp')) document.getElementById('admin-whatsapp').value = savedData.whatsapp || "";
+            if(document.getElementById('admin-phone')) document.getElementById('admin-phone').value = savedData.phone || "";
+            if(document.getElementById('admin-instagram')) document.getElementById('admin-instagram').value = savedData.instagram || "";
+            if(document.getElementById('admin-facebook')) document.getElementById('admin-facebook').value = savedData.facebook || "";
+        }
+
+        function saveAnnouncementBar() {
+            const announcementData = {
+                text: document.getElementById('admin-announcement-text').value.trim() || "🌿 Welcome to Sasya Farmer Market",
+                link: document.getElementById('admin-announcement-link').value.trim() || "vegetables.html",
+                active: document.getElementById('admin-announcement-active').checked
+            };
+            localStorage.setItem('sasya_announcement', JSON.stringify(announcementData));
+            alert("✅ అనౌన్స్‌మెంట్ బార్ విజయవంతంగా సేవ్ చేయబడింది!");
+        }
+
+        function loadAnnouncementInput() {
+            let saved = JSON.parse(localStorage.getItem('sasya_announcement')) || { text: "", link: "", active: true };
+            if(document.getElementById('admin-announcement-text')) document.getElementById('admin-announcement-text').value = saved.text;
+            if(document.getElementById('admin-announcement-link')) document.getElementById('admin-announcement-link').value = saved.link;
+            if(document.getElementById('admin-announcement-active')) document.getElementById('admin-announcement-active').checked = saved.active;
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('stat-total').innerText = products.length;
+            document.getElementById('stat-veg').innerText = products.filter(p => p.category === 'vegetables').length;
+            document.getElementById('stat-fruits').innerText = products.filter(p => p.category === 'fruits').length;
+            document.getElementById('stat-grains').innerText = products.filter(p => p.category === 'grains').length;
+            document.getElementById('stat-pulses').innerText = products.filter(p => p.category === 'pulses').length;
+        }
+
+        function renderAdminStockManager() {
+            const container = document.getElementById('stock-management-list');
+            if (!container) return;
+
+            let html = `<table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                <thead><tr style="background:#2d6a4f; color:white;">
+                    <th style="padding:8px;">Product</th>
+                    <th style="padding:8px;">Farmer Price (Buy)</th>
+                    <th style="padding:8px;">Selling Price</th>
+                    <th style="padding:8px;">Profit / Unit</th>
+                    <th style="padding:8px;">Stock</th>
+                    <th style="padding:8px;">Status</th>
+                    <th style="padding:8px; text-align:center;">Action</th>
+                </tr></thead><tbody>`;
+
+            products.forEach(p => {
+                let buy = p.costPrice || 0;
+                let sell = p.price || 0;
+                let profit = sell - buy;
+                let isPub = p.isPublished === true;
+
+                html += `<tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:8px; font-weight:bold;">${p.name}</td>
+                    <td style="padding:8px; color:#b91c1c;">₹${buy}</td>
+                    <td style="padding:8px;">₹<input type="number" id="sell-price-${p.id}" value="${sell}" style="width:60px; padding:4px;"></td>
+                    <td style="padding:8px; font-weight:bold; color:${profit >= 0 ? '#15803d' : '#dc2626'};">₹${profit}</td>
+                    <td style="padding:8px;"><input type="number" id="stock-input-${p.id}" value="${p.stock || 0}" style="width:50px; padding:4px;"></td>
+                    <td style="padding:8px;">
+                        <label style="font-size:11px; cursor:pointer;">
+                            <input type="checkbox" id="publish-check-${p.id}" ${isPub ? 'checked' : ''}> 
+                            ${isPub ? '<span class="badge-published">Live</span>' : '<span class="badge-unpublished">Hidden</span>'}
+                        </label>
+                    </td>
+                    <td style="padding:8px; text-align:center;">
+                        <button onclick="updateQuickPricing(${p.id})" style="background:#2d6a4f; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Save</button>
+                    </td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function updateQuickPricing(id) {
+            let p = products.find(prod => prod.id == id);
+            if(p) {
+                p.price = Number(document.getElementById(`sell-price-${id}`).value);
+                p.stock = Number(document.getElementById(`stock-input-${id}`).value);
+                p.isPublished = document.getElementById(`publish-check-${id}`).checked;
+                saveData();
+                alert(`✅ ${p.name} వివరాలు అప్‌డేట్ చేయబడ్డాయి!`);
+            }
+        }
+
+        // 🧑‍🌾 Farmer Requests: Approve to Stock or Reject
+        function loadFarmerRequestsAdmin() {
+            const container = document.getElementById('admin-farmer-requests');
+            if (!container) return;
+            
+            let requests = JSON.parse(localStorage.getItem('farmer_requests')) || [];
+            
+            if(requests.length === 0) {
+                container.innerHTML = "<p style='color:#666; font-size:13px;'>పెండింగ్ రిక్వెస్ట్‌లు ఏమీ లేవు.</p>";
+                return;
+            }
+
+            let html = `<table style="width:100%; border-collapse:collapse; background:white; font-size:13px;">
+                <thead><tr style="background:#1b4332; color:white;">
+                    <th style="padding:8px;">రైతు వివరాలు</th>
+                    <th style="padding:8px;">పంట & ఫోటో</th>
+                    <th style="padding:8px;">రైతు ధర (Buy)</th>
+                    <th style="padding:8px; text-align:center;">చర్యలు</th>
+                </tr></thead><tbody>`;
+
+            requests.forEach((req, index) => {
+                html += `<tr style="border-bottom:1px solid #ddd;">
+                    <td style="padding:8px;"><strong>${req.farmer}</strong><br>📞 ${req.phone}<br>📍 ${req.location}</td>
+                    <td style="padding:8px;">
+                        <img src="${req.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; vertical-align:middle; margin-right:5px;">
+                        <strong>${req.name}</strong> (${req.unit})
+                    </td>
+                    <td style="padding:8px; color:#b91c1c; font-weight:bold;">₹${req.price}</td>
+                    <td style="padding:8px; text-align:center;">
+                        <button onclick="approveFarmerToStock(${index})" style="background:#16a34a; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:11px; margin-right:5px;">✅ అప్రూవ్ (Stock)</button>
+                        <button onclick="rejectFarmerProduct(${index})" style="background:#dc2626; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:11px;">❌ తిరస్కరించు</button>
+                    </td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        // 1. Approve to Stock Only (Direct ga website lo publish avvadu)
+        function approveFarmerToStock(index) {
+            let requests = JSON.parse(localStorage.getItem('farmer_requests')) || [];
+            let req = requests[index];
+            if (!req) return;
+
+            loadProducts();
+            
+            let newProductObj = {
+                id: req.id || Date.now(),
+                name: req.name,
+                category: req.category,
+                costPrice: Number(req.price),
+                price: Number(req.price) + 10, // Default tentative margin
+                unit: req.unit,
+                image: req.image,
+                stock: Number(req.quantity) || 20,
+                isPublished: false // 🛑 వెబ్‌సైట్‌లో ఇక్కడ కనిపించదు, కేవలం stock లోకి వెళుతుంది
+            };
+
+            products.unshift(newProductObj);
+            localStorage.setItem('sasya_all_products', JSON.stringify(products));
+
+            // Update History Status
+            let masterDirectory = JSON.parse(localStorage.getItem('sasya_all_farmer_submissions')) || [];
+            masterDirectory.forEach(item => {
+                if(item.id === req.id || (item.farmerName === req.farmer && item.productName === req.name)) {
+                    item.status = "Approved (In Stock)";
+                }
+            });
+            localStorage.setItem('sasya_all_farmer_submissions', JSON.stringify(masterDirectory));
+
+            // Remove from pending
+            requests.splice(index, 1);
+            localStorage.setItem('farmer_requests', JSON.stringify(requests));
+
+            alert(`✅ ${req.name} స్టాక్‌లోకి చేర్చబడింది! ఇది ఇ现在的 వెబ్‌సైట్‌లో కనిపించదు. మీరు 'Pricing & Profit' ట్యాబ్‌లో ధర మార్చి Publish చేసుకోవచ్చు.`);
+            refreshUI();
+        }
+
+        // 2. Reject Farmer Request
+        function rejectFarmerProduct(index) {
+            let requests = JSON.parse(localStorage.getItem('farmer_requests')) || [];
+            let req = requests[index];
+            if (!req) return;
+
+            let masterDirectory = JSON.parse(localStorage.getItem('sasya_all_farmer_submissions')) || [];
+            masterDirectory.forEach(item => {
+                if(item.id === req.id || (item.farmerName === req.farmer && item.productName === req.name)) {
+                    item.status = "Rejected";
+                }
+            });
+            localStorage.setItem('sasya_all_farmer_submissions', JSON.stringify(masterDirectory));
+
+            requests.splice(index, 1);
+            localStorage.setItem('farmer_requests', JSON.stringify(requests));
+
+            alert("❌ రైతు పంట రిక్వెస్ట్ తిరస్కరించబడింది.");
+            refreshUI();
+        }
+
+        function renderAllFarmersDirectory() {
+            const container = document.getElementById('admin-all-farmers-list');
+            if (!container) return;
+            let masterDirectory = JSON.parse(localStorage.getItem('sasya_all_farmer_submissions')) || [];
+            if (masterDirectory.length === 0) {
+                container.innerHTML = "<p style='color: #888; font-size: 13px;'>ఎటువంటి రికార్డులు లేవు.</p>";
+                return;
+            }
+            let html = `<table style="width:100%; border-collapse: collapse; font-size: 13px;">
+                <thead><tr style="background: #1d3557; color: white;">
+                    <th style="padding: 8px;">రైతు పేరు</th>
+                    <th style="padding: 8px;">పంట</th>
+                    <th style="padding: 8px;">ధర</th>
+                    <th style="padding: 8px;">స్థితి (Status)</th>
+                </tr></thead><tbody>`;
+            masterDirectory.forEach(item => {
+                let badgeColor = item.status.includes('Approved') ? '#16a34a' : (item.status === 'Rejected' ? '#dc2626' : '#d97706');
+                html += `<tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>${item.farmerName}</strong><br>📞 ${item.phone}</td>
+                    <td style="padding: 8px;">${item.productName} (${item.quantity})</td>
+                    <td style="padding: 8px;">₹${item.price}</td>
+                    <td style="padding: 8px;"><span style="color:white; background:${badgeColor}; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;">${item.status}</span></td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function renderSalesReport() {
+            let orders = JSON.parse(localStorage.getItem('sasya_orders')) || [];
+            let totalRevenue = 0;
+            let totalCost = 0;
+
+            orders.forEach(ord => {
+                if(ord.totalAmount) {
+                    totalRevenue += ord.totalAmount;
+                    totalCost += (ord.totalAmount * 0.7);
+                }
+            });
+
+            let netProfit = totalRevenue - totalCost;
+            document.getElementById('report-total-revenue').innerText = `₹${totalRevenue.toLocaleString()}`;
+            document.getElementById('report-total-cost').innerText = `₹${totalCost.toLocaleString()}`;
+            document.getElementById('report-net-profit').innerText = `₹${netProfit.toLocaleString()}`;
+
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            if (salesChartInstance) { salesChartInstance.destroy(); }
+
+            salesChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Revenue', 'Cost', 'Profit'],
+                    datasets: [{
+                        data: [totalRevenue, totalCost, netProfit],
+                        backgroundColor: ['#0284c7', '#be123c', '#16a34a']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function refreshUI(filteredList = null, isSearching = false) {
+            loadProducts();
+            updateDashboardStats();
+            renderAdminStockManager();
+            loadFarmerRequestsAdmin();
+            renderAllFarmersDirectory();
+            loadSocialLinksInput();
+            loadAnnouncementInput();
+
+            const dropdown = document.getElementById('select-product-dropdown');
+            if (!dropdown) return;
+            const listToRender = filteredList !== null ? filteredList : products;
+            dropdown.innerHTML = isSearching ? '' : '<option value="">-- Select Product --</option>';
+            listToRender.forEach(p => {
+                dropdown.innerHTML += `<option value="${p.id}">${p.name} (Sell: ₹${p.price})</option>`;
+            });
+        }
+
+        function filterAdminDropdown() {
+            const searchText = document.getElementById('admin-search-input').value.toLowerCase().trim();
+            if (searchText === '') { refreshUI(null, false); return; }
+            const filtered = products.filter(p => p.name.toLowerCase().includes(searchText));
+            refreshUI(filtered, true);
+        }
+
+        function handleDropdownEdit() {
+            const selectedId = document.getElementById('select-product-dropdown').value;
+            if (!selectedId) { alert("ప్రొడక్ట్‌ను ఎంచుకోండి!"); return; }
+            const p = products.find(prod => prod.id == selectedId);
+            if (!p) return;
+
+            document.getElementById('editing-id').value = p.id;
+            document.getElementById('p-name').value = p.name;
+            document.getElementById('p-category').value = p.category;
+            document.getElementById('p-cost-price').value = p.costPrice || '';
+            document.getElementById('p-price').value = p.price;
+            document.getElementById('p-unit').value = p.unit;
+            document.getElementById('p-stock').value = p.stock;
+            document.getElementById('p-image').value = p.image;
+            document.getElementById('p-published').checked = p.isPublished === true;
+
+            document.getElementById('form-title').innerText = '✏️ Edit Product Details';
+            document.getElementById('submit-btn').innerText = 'Update Product';
+            document.getElementById('cancel-btn').style.display = 'block';
+        }
+
+        function handleDropdownDelete() {
+            const selectedId = document.getElementById('select-product-dropdown').value;
+            if (!selectedId) { alert("ప్రొడక్ట్‌ను ఎంచుకోండి!"); return; }
+            if (confirm("ఈ ప్రొడక్ట్‌ను డిలీట్ చేయాలా?")) {
+                products = products.filter(p => p.id != selectedId);
+                saveData();
+                alert("✅ ప్రొడక్ట్ తొలగించబడింది!");
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editing-id').value;
+            const name = document.getElementById('p-name').value;
+            const category = document.getElementById('p-category').value;
+            const costPrice = Number(document.getElementById('p-cost-price').value) || 0;
+            const price = Number(document.getElementById('p-price').value);
+            const unit = document.getElementById('p-unit').value;
+            const stock = Number(document.getElementById('p-stock').value);
+            const image = document.getElementById('p-image').value || 'image/default.jpg';
+            const isPublished = document.getElementById('p-published').checked;
+
+            if(editId) {
+                let p = products.find(prod => prod.id == editId);
+                if(p) {
+                    p.name = name; p.category = category; p.costPrice = costPrice;
+                    p.price = price; p.unit = unit; p.stock = stock; p.image = image; p.isPublished = isPublished;
+                }
+            } else {
+                let newP = {
+                    id: Date.now(),
+                    name, category, costPrice, price, unit, stock, image, isPublished
+                };
+                products.unshift(newP);
+            }
+
+            saveData();
+            resetForm();
+            alert("✅ ప్రొడక్ట్ విజయవంతంగా సేవ్ చేయబడింది!");
+        }
+
+        function resetForm() {
+            document.getElementById('admin-product-form').reset();
+            document.getElementById('editing-id').value = '';
+            document.getElementById('form-title').innerText = '➕ Add / Edit Product';
+            document.getElementById('submit-btn').innerText = 'Save Product Details';
+            document.getElementById('cancel-btn').style.display = 'none';
+        }
+
+        function exportDataBackup() {
+            const dataObj = {
+                products: JSON.parse(localStorage.getItem('sasya_all_products')) || [],
+                requests: JSON.parse(localStorage.getItem('farmer_requests')) || [],
+                history: JSON.parse(localStorage.getItem('sasya_all_farmer_submissions')) || [],
+                orders: JSON.parse(localStorage.getItem('sasya_orders')) || []
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "sasya_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importDataBackup(event) {
+            const fileReader = new FileReader();
+            if(event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = function(e) {
+                    try {
+                        const parsed = JSON.parse(e.target.result);
+                        if(parsed.products) localStorage.setItem('sasya_all_products', JSON.stringify(parsed.products));
+                        if(parsed.requests) localStorage.setItem('farmer_requests', JSON.stringify(parsed.requests));
+                        if(parsed.history) localStorage.setItem('sasya_all_farmer_submissions', JSON.stringify(parsed.history));
+                        alert("✅ డేటా విజయవంతంగా రీస్టోర్ చేయబడింది!");
+                        refreshUI();
+                    } catch(err) {
+                        alert("❌ ఫైల్ రీడింగ్ లో లోపం సంభవించింది.");
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
