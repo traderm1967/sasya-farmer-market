@@ -1,6 +1,6 @@
 const OWNER_WHATSAPP_NUMBER = "919876543210";
 
-// 1. Master Products Catalog (All paths updated to images/)
+// 1. Master Products Catalog
 const defaultProducts = [
     { id: 101, name: "Fresh Tomatoes", category: "vegetables", price: 40, costPrice: 25, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
     { id: 102, name: "Organic Mangoes", category: "fruits", price: 120, costPrice: 80, unit: "kg", image: "images/mango.jpg", organic: true, stock: 0, isPublished: true },
@@ -120,6 +120,26 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     });
     menuHTML += `</div>`;
     grid.innerHTML = menuHTML;
+}
+
+// Wishlist Functionality
+function toggleWishlist(id, event) {
+    if (event) event.stopPropagation();
+    let index = wishlist.indexOf(id);
+    if (index > -1) {
+        wishlist.splice(index, 1);
+    } else {
+        wishlist.push(id);
+    }
+    localStorage.setItem('sasya_wishlist', JSON.stringify(wishlist));
+    refreshCurrentPageGrid();
+}
+
+// Quick View Functionality
+function openQuickView(id) {
+    let p = products.find(prod => prod.id == id);
+    if (!p) return;
+    alert(`${p.name}\nధర: ₹${p.price} / ${p.unit || 'kg'}\nఆర్గానిక్: ${p.organic ? 'అవును' : 'కాదు'}\nస్టాక్: ${p.stock}`);
 }
 
 // Search Functionality
