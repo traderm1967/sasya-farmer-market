@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sasya Farmer Market</title>
+    <base href="./">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -41,7 +42,7 @@
         </div>
     </nav>
 
-    <!-- 🎯 Direct Pure HTML/CSS Top Announcement Offer Bar -->
+    <!-- 🎯 Top Announcement Offer Bar -->
     <a href="#offers-section-container" style="display: block !important; text-decoration: none !important; width: 100%;">
         <div style="background: linear-gradient(90deg, #dc2626, #b91c1c) !important; color: #ffffff !important; text-align: center !important; padding: 12px 15px !important; font-size: 16px !important; font-weight: bold !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer;">
             🔥 <span style="background: #facc15; color: #000000; padding: 2px 8px; border-radius: 4px; font-size: 13px; margin-right: 6px;">SPECIAL OFFER</span> 🎉 ప్రత్యేక ఆఫర్! అన్ని ఆర్డర్లపై 15% డిస్కౌంట్ పొందండి! ➔
@@ -100,40 +101,12 @@
         </div>
     </section>
 
-    <!-- Daily Deals / Flash Sale Banner with Countdown & Auto-Slider -->
-    <section class="flash-sale-banner" id="flash-sale-section">
-        <div class="flash-sale-content">
-            <div class="flash-sale-left" style="flex: 1; min-width: 280px; max-width: 600px;">
-                <span class="flash-badge">⚡ DEAL OF THE DAY</span>
-                <div id="deal-product-container" class="deal-product-box" style="margin-top: 8px;">
-                    <!-- Products dynamically rendered -->
-                </div>
-            </div>
-
-            <div class="timer-box">
-                <span>Ends In:</span>
-                <div id="flash-timer">
-                    <span id="timer-hours">04</span>h : 
-                    <span id="timer-mins">30</span>m : 
-                    <span id="timer-secs">00</span>s
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Special Offers Section -->
-    <section id="offers-section-container" class="offers-section">
-        <div class="offers-title">🔥 ప్రత్యేక ఆఫర్లు & డిస్కౌంట్లు (Special Offers)</div>
-        <div class="offers-slider-container">
-            <div id="offers-wrapper" class="offers-wrapper">
-                <!-- Offer Cards -->
-            </div>
-        </div>
-    </section>
-
     <!-- Main Products Category Navigation Section -->
     <section id="products" class="products-section">
-        <h2 class="section-title">Our Fresh Products</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; max-width:1100px; margin:0 auto 15px auto; padding:0 15px;">
+            <h2 class="section-title" style="margin:0;">Our Fresh Products</h2>
+            <button onclick="localStorage.clear(); location.reload();" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:12px;">🔄 Reset Storage Cache</button>
+        </div>
         
         <!-- Category Cards Grid -->
         <div id="category-grid-container" class="category-grid">
@@ -170,7 +143,7 @@
             </a>
         </div>
 
-        <!-- Dynamic Product Container for Search/All Products -->
+        <!-- Dynamic Product Grid -->
         <div id="product-grid" class="product-grid" style="margin-top: 25px;"></div>
     </section>
 
@@ -212,7 +185,7 @@
 
             <div class="footer-col">
                 <h4>Contact Us</h4>
-                <p><i class="fa-solid fa-location-dot"></i> Tirupati Town, Andhra Pradesh</p>
+                <p><i class="fa-solid fa-location-dot"></i> Shanmuham Mokam, Tirupati Town, AP</p>
                 <p><i class="fa-solid fa-phone"></i> +91 8977881224</p>
                 <p><i class="fa-solid fa-envelope"></i> shanmugam75@gmail.com</p>
                 <p><i class="fa-solid fa-envelope"></i> support@sasyafarmer.com</p>
@@ -221,11 +194,9 @@
         <div class="footer-bottom">
             <p>&copy; 2026 Sasya Farmer Market. All Rights Reserved. Crafted with fresh organic love 💚</p>
         </div>
-        
-        <div id="footer-social-container"></div>
     </footer>
 
-    <!-- Script Integration -->
-    <script src="script.js?v=500.0"></script>
+    <!-- Script Integration with forced version update -->
+    <script src="script.js?v=999.0"></script>
 </body>
 </html>
