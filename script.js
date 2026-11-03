@@ -1,12 +1,12 @@
 const OWNER_WHATSAPP_NUMBER = "919876543210";
 
-// 1. Master Products Catalog
+// 1. Master Products Catalog (Relative paths normalized)
 const defaultProducts = [
-    { id: 101, name: "Fresh Tomatoes", category: "vegetables", price: 40, costPrice: 25, unit: "kg", image: "./images/tomato.jpg", organic: true, stock: 15, isPublished: true },
-    { id: 102, name: "Organic Mangoes", category: "fruits", price: 120, costPrice: 80, unit: "kg", image: "./images/mango.jpg", organic: true, stock: 0, isPublished: true },
-    { id: 103, name: "Premium Rice 5kg", category: "grains", price: 350, costPrice: 280, unit: "pack", image: "./images/rice.jpg", organic: false, stock: 10, isPublished: true },
-    { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, costPrice: 110, unit: "kg", image: "./images/toordal.jpg", organic: false, stock: 8, isPublished: true },
-    { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, costPrice: 90, unit: "kg", image: "./images/greengram.jpg", organic: true, stock: 20, isPublished: true },
+    { id: 101, name: "Fresh Tomatoes", category: "vegetables", price: 40, costPrice: 25, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
+    { id: 102, name: "Organic Mangoes", category: "fruits", price: 120, costPrice: 80, unit: "kg", image: "images/mango.jpg", organic: true, stock: 0, isPublished: true },
+    { id: 103, name: "Premium Rice 5kg", category: "grains", price: 350, costPrice: 280, unit: "pack", image: "images/rice.jpg", organic: false, stock: 10, isPublished: true },
+    { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, costPrice: 110, unit: "kg", image: "images/toordal.jpg", organic: false, stock: 8, isPublished: true },
+    { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, costPrice: 90, unit: "kg", image: "images/greengram.jpg", organic: true, stock: 20, isPublished: true },
     { id: 106, name: "Fresh Banana", category: "fruits", price: 60, costPrice: 40, unit: "dozen", image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&auto=format&fit=crop", organic: true, stock: 12, isPublished: true },
     { id: 107, name: "Red Apples", category: "fruits", price: 180, costPrice: 130, unit: "kg", image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&auto=format&fit=crop", organic: false, stock: 5, isPublished: true }
 ];
@@ -32,17 +32,28 @@ function initProducts() {
         if (Array.isArray(parsed) && parsed.length > 0) {
             products = parsed;
         } else {
-            products = [...defaultProducts];
+            products = JSON.parse(JSON.stringify(defaultProducts));
             localStorage.setItem('sasya_all_products', JSON.stringify(products));
         }
     } catch(e) {
-        products = [...defaultProducts];
+        products = JSON.parse(JSON.stringify(defaultProducts));
     }
 }
 
+// Fixed GitHub Pages Relative Image Resolution
 function getValidImage(imgSrc) {
     if (imgSrc && typeof imgSrc === 'string' && imgSrc.trim() !== '') {
-        return imgSrc.trim();
+        let path = imgSrc.trim();
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+            return path;
+        }
+        if (path.startsWith('./')) {
+            path = path.substring(2);
+        }
+        if (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+        return path;
     }
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
@@ -431,6 +442,13 @@ function orderViaWhatsApp() {
 
     window.open(`https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${message}`, '_blank');
     clearCartCompletely();
+}
+
+// Helper: Clear cache & reload completely
+function resetAllAppCache() {
+    localStorage.removeItem('sasya_all_products');
+    localStorage.removeItem('sasya_cart_items');
+    location.reload();
 }
 
 // 6. Init execution on Page Load
