@@ -1,9 +1,10 @@
 const OWNER_WHATSAPP_NUMBER = "918977881224";
 
 const defaultProducts = [
-    { id: 101, name: "Fresh Tomatoes", category: "vegetables", price: 40, costPrice: 25, unit: "kg", images: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
-    { id: 102, name: "Organic Mangoes", category: "fruits", price: 120, costPrice: 80, unit: "kg", images: "images/mango.jpg", organic: true, stock: 0, isPublished: true },
-    { id: 103, name: "Premium Rice 5kg", category: "grains", price: 350, costPrice: 280, unit: "pack", images: "images/rice.jpg", organic: false, stock: 10, isPublished: true },
+   { id: 101, name: "Tomato", image: "images/tomato.jpg" },
+{ id: 102, name: "Potato", image: "images/potato.jpg" }, // 🟢 ప్రతి ప్రొడక్ట్‌కీ దానికి సరిపోయే ఫోటో పేరు ఇవ్వాలి
+{ id: 103, name: "Onion", image: "images/onion.jpg" },
+   
     { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, costPrice: 110, unit: "kg", images: "images/toordal.jpg", organic: false, stock: 8, isPublished: true },
     { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, costPrice: 90, unit: "kg", images: "images/greengram.jpg", organic: true, stock: 20, isPublished: true },
 { id: 105, name: "Papaya (Papaya)", category: "vegetables", price: 120, costPrice: 90, unit: "kg", images: "./images/papaya.jpg", organic: true, stock: 20, isPublished: true },
