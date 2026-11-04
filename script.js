@@ -1,16 +1,14 @@
 const OWNER_WHATSAPP_NUMBER = "918977881224";
 
 const defaultProducts = [
-   { id: 101, name: "Tomato", image: "images/tomato.jpg" },
-{ id: 102, name: "Potato", image: "images/potato.jpg" }, // 🟢 ప్రతి ప్రొడక్ట్‌కీ దానికి సరిపోయే ఫోటో పేరు ఇవ్వాలి
-{ id: 103, name: "Onion", image: "images/onion.jpg" },
-   
-    { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, costPrice: 110, unit: "kg", images: "images/toordal.jpg", organic: false, stock: 8, isPublished: true },
-    { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, costPrice: 90, unit: "kg", images: "images/greengram.jpg", organic: true, stock: 20, isPublished: true },
-{ id: 105, name: "Papaya (Papaya)", category: "vegetables", price: 120, costPrice: 90, unit: "kg", images: "./images/papaya.jpg", organic: true, stock: 20, isPublished: true },
-    
-    { id: 106, name: "Fresh Banana", category: "fruits", price: 60, costPrice: 40, unit: "dozen", images: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&auto=format&fit=crop", organic: true, stock: 12, isPublished: true },
-    { id: 107, name: "Red Apples", category: "fruits", price: 180, costPrice: 130, unit: "kg", images: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&auto=format&fit=crop", organic: false, stock: 5, isPublished: true }
+    { id: 101, name: "Tomato", category: "vegetables", price: 40, costPrice: 30, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
+    { id: 102, name: "Potato", category: "vegetables", price: 40, costPrice: 30, unit: "kg", image: "images/potato.jpg", organic: false, stock: 20, isPublished: true },
+    { id: 103, name: "Onion", category: "vegetables", price: 35, costPrice: 25, unit: "kg", image: "images/onion.jpg", organic: false, stock: 25, isPublished: true },
+    { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, costPrice: 110, unit: "kg", image: "images/toordal.jpg", organic: false, stock: 8, isPublished: true },
+    { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, costPrice: 90, unit: "kg", image: "images/greengram.jpg", organic: true, stock: 20, isPublished: true },
+    { id: 106, name: "Papaya", category: "fruits", price: 60, costPrice: 45, unit: "kg", image: "images/papaya.jpg", organic: true, stock: 20, isPublished: true },
+    { id: 107, name: "Fresh Banana", category: "fruits", price: 60, costPrice: 40, unit: "dozen", image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&auto=format&fit=crop", organic: true, stock: 12, isPublished: true },
+    { id: 108, name: "Red Apples", category: "fruits", price: 180, costPrice: 130, unit: "kg", image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&auto=format&fit=crop", organic: false, stock: 5, isPublished: true }
 ];
 
 let products = [];
@@ -39,6 +37,7 @@ function initProducts() {
     }
 }
 
+// 🟢 Image fallback & Property handler (image & images రెండింటినీ సపోర్ట్ చేస్తుంది)
 function getValidImage(imgSrc) {
     if (imgSrc && typeof imgSrc === 'string' && imgSrc.trim() !== '') {
         let clean = imgSrc.trim();
@@ -91,7 +90,8 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     filteredList.forEach(p => {
         const cartItem = cart.find(item => item.id == p.id);
         const qty = cartItem ? cartItem.quantity : 0;
-        const imgSrc = getValidImage(p.image);
+        // 🟢 Check both p.image and p.images
+        const imgSrc = getValidImage(p.image || p.images);
         const isSaved = wishlist.includes(p.id) ? '❤️' : '🤍';
         const isOutOfStock = p.stock !== undefined && p.stock <= 0;
 
