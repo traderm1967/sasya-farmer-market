@@ -6,7 +6,7 @@ const defaultProducts = [
     { id: 103, name: "Onion", category: "vegetables", price: 35, costPrice: 25, unit: "kg", image: "images/onion.jpg", organic: false, stock: 25, isPublished: true },
     { id: 104, name: "Toor Dal (Kandi Pappu)", category: "pulses", price: 140, costPrice: 110, unit: "kg", image: "images/toordal.jpg", organic: false, stock: 8, isPublished: true },
     { id: 105, name: "Green Gram (Pesalu)", category: "pulses", price: 120, costPrice: 90, unit: "kg", image: "images/greengram.jpg", organic: true, stock: 20, isPublished: true },
-    { id: 106, name: "Papaya", category: "fruits", price: 60, costPrice: 45, unit: "kg", image: "images/papaya.jpg", organic: true, stock: 20, isPublished: true },
+    { id: 106, name: "Papaya", category: "vegetables", price: 60, costPrice: 45, unit: "kg", image: "images/papaya.jpg", organic: true, stock: 20, isPublished: true },
     { id: 107, name: "Fresh Banana", category: "fruits", price: 60, costPrice: 40, unit: "dozen", image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&auto=format&fit=crop", organic: true, stock: 12, isPublished: true },
     { id: 108, name: "Red Apples", category: "fruits", price: 180, costPrice: 130, unit: "kg", image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&auto=format&fit=crop", organic: false, stock: 5, isPublished: true }
 ];
@@ -22,11 +22,14 @@ try {
     cart = []; wishlist = [];
 }
 
+// 🟢 LocalStorage లో ఉన్న పాత/చెడిపోయిన డేటాను తీసేసి కొత్త కోడ్‌ను లోడ్ చేసే ఫంక్షన్
 function initProducts() {
     try {
         let savedData = localStorage.getItem('sasya_all_products');
         let parsed = savedData ? JSON.parse(savedData) : null;
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        
+        // పాత డేటా ఉండి అందులో 'image' property లేకపోతే దాన్ని రీసెట్ చేస్తాం
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].image) {
             products = parsed;
         } else {
             products = JSON.parse(JSON.stringify(defaultProducts));
@@ -37,7 +40,7 @@ function initProducts() {
     }
 }
 
-// 🟢 Image fallback & Property handler (image & images రెండింటినీ సపోర్ట్ చేస్తుంది)
+// 🟢 ఇమేజ్ పాత్‌లను సరిదిద్దే ఫంక్షన్
 function getValidImage(imgSrc) {
     if (imgSrc && typeof imgSrc === 'string' && imgSrc.trim() !== '') {
         let clean = imgSrc.trim();
@@ -90,7 +93,8 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     filteredList.forEach(p => {
         const cartItem = cart.find(item => item.id == p.id);
         const qty = cartItem ? cartItem.quantity : 0;
-        // 🟢 Check both p.image and p.images
+        
+        // 🟢 image మరియు images రెండింటినీ చెక్ చేసాం
         const imgSrc = getValidImage(p.image || p.images);
         const isSaved = wishlist.includes(p.id) ? '❤️' : '🤍';
         const isOutOfStock = p.stock !== undefined && p.stock <= 0;
@@ -237,6 +241,8 @@ function openCart() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    // ఫోర్స్ రీసెట్: పాత క్యాచే డేటాను తీసేయడానికి
+    localStorage.removeItem('sasya_all_products');
     initProducts();
     updateCartUI();
     refreshCurrentPageGrid();
