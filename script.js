@@ -280,9 +280,17 @@ function openCart() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // పాత బ్రౌజర్ స్టోరేజ్ క్లియర్ చేసి కొత్త ఇమేజెస్ లోడ్ చేస్తుంది
     localStorage.removeItem('sasya_all_products');
     initProducts();
     updateCartUI();
-    refreshCurrentPageGrid();
+    
+    // 🟢 హోమ్‌పేజీ (`home`) అయితే ప్రొడక్ట్స్‌ని రెండర్ చేయొద్దు అని చెప్పే లాజిక్
+    let currentCat = getCurrentPageCategory();
+    if (currentCat !== 'home') {
+        renderCategoryPageProducts(currentCat);
+    } else {
+        // హోమ్‌పేజీలో product-grid ఉంటే దాన్ని పూర్తిగా ఖాళీ చేయడం
+        const grid = document.getElementById('product-grid');
+        if (grid) grid.innerHTML = '';
+    }
 });
