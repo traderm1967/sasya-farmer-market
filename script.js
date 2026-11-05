@@ -75,19 +75,17 @@ function getValidImage(imgSrc) {
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
 
+// 1. Current page category detect chese function
 function getCurrentPageCategory() {
     let path = window.location.pathname.toLowerCase();
     if (path.includes('fruits')) return 'fruits';
     if (path.includes('vegetables')) return 'vegetables';
     if (path.includes('grains')) return 'grains';
     if (path.includes('pulses')) return 'pulses';
-    return 'all';
+    return 'home'; // 🟢 Home page aithe 'home' ani return chesthundi
 }
 
-function refreshCurrentPageGrid() {
-    renderCategoryPageProducts(getCurrentPageCategory());
-}
-
+// 2. Products render chese function update
 function renderCategoryPageProducts(categoryName, customList = null) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -97,18 +95,24 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     let filteredList = customList;
 
     if (!filteredList) {
-        filteredList = products.filter(p => {
-            let pCat = (p.category || '').toLowerCase().trim();
-            let isPub = p.isPublished !== false;
-            if (targetCategory === 'all' || targetCategory === '') return isPub;
-            return pCat === targetCategory && isPub;
-        });
+        if (targetCategory === 'home') {
+            // 🟢 Home page lo kevalam selected top 8 products (Featured) mathrame kanipisthayi
+            filteredList = products.filter(p => p.isPublished !== false).slice(0, 8);
+        } else if (targetCategory === 'all' || targetCategory === '') {
+            filteredList = products.filter(p => p.isPublished !== false);
+        } else {
+            filteredList = products.filter(p => {
+                let pCat = (p.category || '').toLowerCase().trim();
+                let isPub = p.isPublished !== false;
+                return pCat === targetCategory && isPub;
+            });
+        }
     }
 
     grid.innerHTML = '';
 
     if (!filteredList || filteredList.length === 0) {
-        grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 30px; color: #dc2626; font-weight: bold; width:100%;">ఈ కేటగిరీలో ప్రొడక్ట్స్ ఏవీ అందుబాటులో లేవు.</p>`;
+        grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 30px; color: #dc2626; font-weight: bold; width:100%;">Eee category lo products evi andubhatulo levu.</p>`;
         return;
     }
 
@@ -145,7 +149,6 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     menuHTML += `</div>`;
     grid.innerHTML = menuHTML;
 }
-
 function toggleWishlist(id, event) {
     if (event) event.stopPropagation();
     let index = wishlist.indexOf(id);
