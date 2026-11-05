@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentCat = getCurrentPageCategory();
     renderCategoryPageProducts(currentCat);
 });
-// 2. Products render chese function update
+
 function renderCategoryPageProducts(categoryName, customList = null) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -107,8 +107,13 @@ function renderCategoryPageProducts(categoryName, customList = null) {
 
     if (!filteredList) {
         if (targetCategory === 'home') {
-            // 🟢 Home page lo kevalam selected top 8 products (Featured) mathrame kanipisthayi
-            filteredList = products.filter(p => p.isPublished !== false).slice(0, 8);
+            // 🟢 హోమ్ పేజీ కోసం ప్రతి కేటగిరీ నుంచి 2 చొప్పున (మొత్తం 8) మిక్స్ చేసి చూపిస్తాం
+            const vegs = products.filter(p => p.category === 'vegetables' && p.isPublished !== false).slice(0, 2);
+            const fruits = products.filter(p => p.category === 'fruits' && p.isPublished !== false).slice(0, 2);
+            const grains = products.filter(p => p.category === 'grains' && p.isPublished !== false).slice(0, 2);
+            const pulses = products.filter(p => p.category === 'pulses' && p.isPublished !== false).slice(0, 2);
+
+            filteredList = [...vegs, ...fruits, ...grains, ...pulses];
         } else if (targetCategory === 'all' || targetCategory === '') {
             filteredList = products.filter(p => p.isPublished !== false);
         } else {
@@ -123,7 +128,7 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     grid.innerHTML = '';
 
     if (!filteredList || filteredList.length === 0) {
-        grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 30px; color: #dc2626; font-weight: bold; width:100%;">Eee category lo products evi andubhatulo levu.</p>`;
+        grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 30px; color: #dc2626; font-weight: bold; width:100%;">ఈ కేటగిరీలో ప్రొడక్ట్స్ ఏవీ అందుబాటులో లేవు.</p>`;
         return;
     }
 
@@ -160,6 +165,7 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     menuHTML += `</div>`;
     grid.innerHTML = menuHTML;
 }
+
 function toggleWishlist(id, event) {
     if (event) event.stopPropagation();
     let index = wishlist.indexOf(id);
