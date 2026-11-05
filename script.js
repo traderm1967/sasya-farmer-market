@@ -284,13 +284,61 @@ document.addEventListener("DOMContentLoaded", function () {
     initProducts();
     updateCartUI();
     
-    // 🟢 హోమ్‌పేజీ (`home`) అయితే ప్రొడక్ట్స్‌ని రెండర్ చేయొద్దు అని చెప్పే లాజిక్
     let currentCat = getCurrentPageCategory();
     if (currentCat !== 'home') {
         renderCategoryPageProducts(currentCat);
     } else {
-        // హోమ్‌పేజీలో product-grid ఉంటే దాన్ని పూర్తిగా ఖాళీ చేయడం
-        const grid = document.getElementById('product-grid');
-        if (grid) grid.innerHTML = '';
+        // 🟢 హోమ్‌పేజీలో కేవలం Special Offers & Deal of the Day మాత్రమే డిస్‌ప్లే అవుతాయి
+        renderHomePageOffers();
     }
 });
+
+// 🟢 హోమ్‌పేజీ కోసం స్పెషల్ ఆఫర్స్ ఫంక్షన్
+function renderHomePageOffers() {
+    const grid = document.getElementById('product-grid');
+    if (!grid) return;
+
+    // లిస్ట్ లోని మొదటి 4 ఆఫర్ ప్రొడక్ట్స్‌ని ఎంచుకుంటున్నాం
+    const offerProducts = products.filter(p => p.isPublished !== false).slice(0, 4);
+
+    let html = `
+        <div style="width: 100%; margin-top: 20px;">
+            <div style="background: linear-gradient(135deg, #ff9f43, #ee5253); padding: 12px 20px; border-radius: 8px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; font-size: 18px;">🔥 Deal of the Day & Special Offers</h3>
+                <span style="font-size: 12px; background: rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 4px; font-weight: bold;">Limited Time</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+    `;
+
+    offerProducts.forEach(p => {
+        const cartItem = cart.find(item => item.id == p.id);
+        const qty = cartItem ? cartItem.quantity : 0;
+        const imgSrc = getValidImage(p.image || p.images);
+        const isSaved = wishlist.includes(p.id) ? '❤️' : '🤍';
+
+        html += `
+            <div class="product-card" style="background: white; border: 2px solid #ff9f43; border-radius: 10px; padding: 12px; text-align: center; position:relative;">
+                <span style="position:absolute; top:8px; left:8px; background:#ee5253; color:white; font-size:10px; padding:2px 6px; border-radius:4px; font-weight:bold;">OFFER</span>
+                <button onclick="toggleWishlist(${p.id}, event)" style="position:absolute; top:8px; right:8px; border:none; background:none; font-size:18px; cursor:pointer;">${isSaved}</button>
+                <img src="${imgSrc}" alt="${p.name}" onclick="openQuickView(${p.id})" style="width: 100px; height: 100px; object-fit: contain; cursor:pointer;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';">
+                <h4 onclick="openQuickView(${p.id})" style="margin: 8px 0 4px 0; font-size: 14px; color: #14532d; cursor:pointer;">${p.name}</h4>
+                <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: bold; color: #166534;">₹${p.price} / ${p.unit || 'kg'}</p>
+                <div class="menu-item-action">
+                    ${qty > 0 ? `
+                        <div class="qty-btn-container" style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+                            <button class="qty-btn" onclick="updateQuantity(${p.id}, -1)" style="padding: 2px 8px; cursor: pointer;">-</button>
+                            <span class="qty-count" style="font-weight: bold;">${qty}</span>
+                            <button class="qty-btn" onclick="updateQuantity(${p.id}, 1)" style="padding: 2px 8px; cursor: pointer;">+</button>
+                        </div>
+                    ` : `
+                        <button class="btn menu-add-btn" onclick="addToCart(${p.id})" style="background: #2d6a4f; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">+ Add</button>
+                    `}
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div></div>`;
+    grid.innerHTML = html;
+}
