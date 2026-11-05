@@ -103,18 +103,17 @@ function renderCategoryPageProducts(categoryName, customList = null) {
 
     initProducts();
     let targetCategory = (categoryName || '').toLowerCase().trim();
+
+    // 🟢 హోమ్‌పేజీ (home) లో ప్రొడక్ట్ గ్రిడ్ ఏమీ కనిపించకూడదు కాబట్టి grid ని ఖాళీ చేసి ఆపేస్తున్నాం
+    if (targetCategory === 'home') {
+        grid.innerHTML = '';
+        return;
+    }
+
     let filteredList = customList;
 
     if (!filteredList) {
-        if (targetCategory === 'home') {
-            // 🟢 హోమ్ పేజీ కోసం ప్రతి కేటగిరీ నుంచి 2 చొప్పున (మొత్తం 8) మిక్స్ చేసి చూపిస్తాం
-            const vegs = products.filter(p => p.category === 'vegetables' && p.isPublished !== false).slice(0, 2);
-            const fruits = products.filter(p => p.category === 'fruits' && p.isPublished !== false).slice(0, 2);
-            const grains = products.filter(p => p.category === 'grains' && p.isPublished !== false).slice(0, 2);
-            const pulses = products.filter(p => p.category === 'pulses' && p.isPublished !== false).slice(0, 2);
-
-            filteredList = [...vegs, ...fruits, ...grains, ...pulses];
-        } else if (targetCategory === 'all' || targetCategory === '') {
+        if (targetCategory === 'all' || targetCategory === '') {
             filteredList = products.filter(p => p.isPublished !== false);
         } else {
             filteredList = products.filter(p => {
@@ -165,7 +164,6 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     menuHTML += `</div>`;
     grid.innerHTML = menuHTML;
 }
-
 function toggleWishlist(id, event) {
     if (event) event.stopPropagation();
     let index = wishlist.indexOf(id);
