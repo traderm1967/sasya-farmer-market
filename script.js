@@ -75,16 +75,18 @@ function getValidImage(imgSrc) {
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
 
-// 1. Current page category detect chese function
+// 🟢 అన్ని రకాల URL పేర్లను (fruits, fruit, fruits.html) సపోర్ట్ చేసేలా అప్‌డేట్ చేసిన ఫంక్షన్
 function getCurrentPageCategory() {
     let path = window.location.pathname.toLowerCase();
-    if (path.includes('fruits')) return 'fruits';
-    if (path.includes('vegetables')) return 'vegetables';
-    if (path.includes('grains')) return 'grains';
-    if (path.includes('pulses')) return 'pulses';
-    return 'home'; // 🟢 Home page aithe 'home' ani return chesthundi
+    
+    if (path.includes('fruit')) return 'fruits'; // 'fruit' లేదా 'fruits' ఏది ఉన్నా వర్క్ అవుతుంది
+    if (path.includes('veg')) return 'vegetables'; // 'veg' లేదా 'vegetables'
+    if (path.includes('grain')) return 'grains';
+    if (path.includes('pulse') || path.includes('dal')) return 'pulses';
+    
+    // ఒకవేళ పైన ఉన్నవేవీ కాకపోతే (హోమ్ పేజీ అయితే)
+    return 'home';
 }
-
 // 2. Products render chese function update
 function renderCategoryPageProducts(categoryName, customList = null) {
     const grid = document.getElementById('product-grid');
