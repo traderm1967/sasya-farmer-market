@@ -75,18 +75,27 @@ function getValidImage(imgSrc) {
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
 
-// 🟢 అన్ని రకాల URL పేర్లను (fruits, fruit, fruits.html) సపోర్ట్ చేసేలా అప్‌డేట్ చేసిన ఫంక్షన్
+// 🟢 1. URL ని పర్ఫెక్ట్‌గా కేటగిరీకి మ్యాచ్ చేసే ఫంక్షన్
 function getCurrentPageCategory() {
     let path = window.location.pathname.toLowerCase();
     
-    if (path.includes('fruit')) return 'fruits'; // 'fruit' లేదా 'fruits' ఏది ఉన్నా వర్క్ అవుతుంది
-    if (path.includes('veg')) return 'vegetables'; // 'veg' లేదా 'vegetables'
+    if (path.includes('fruit')) return 'fruits';
+    if (path.includes('veg')) return 'vegetables';
     if (path.includes('grain')) return 'grains';
     if (path.includes('pulse') || path.includes('dal')) return 'pulses';
     
-    // ఒకవేళ పైన ఉన్నవేవీ కాకపోతే (హోమ్ పేజీ అయితే)
-    return 'home';
+    return 'home'; // index.html కి 'home'
 }
+
+// 🟢 2. పేజీ ఓపెన్ కాగానే స్వయంచాలకంగా లోడ్ అయ్యేలా:
+document.addEventListener("DOMContentLoaded", function () {
+    localStorage.removeItem('sasya_all_products'); // బ్రౌజర్ క్యాచే రీసెట్
+    initProducts();
+    updateCartUI();
+    
+    let currentCat = getCurrentPageCategory();
+    renderCategoryPageProducts(currentCat);
+});
 // 2. Products render chese function update
 function renderCategoryPageProducts(categoryName, customList = null) {
     const grid = document.getElementById('product-grid');
