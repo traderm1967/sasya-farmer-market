@@ -909,3 +909,80 @@ function switchAdminTab(tabId) {
     buttons.forEach(btn => btn.classList.remove('active'));
     event.currentTarget.classList.add('active');
 }
+
+// 🔄 1. LocalStorage నుండి డిస్కౌంట్‌లు & ఆఫర్‌లను సింక్ చేసే ఫంక్షన్
+function getProductsWithDiscounts() {
+    // 1. అన్ని ప్రొడక్ట్‌లను లోడ్ చేయడం
+    let allProducts = JSON.parse(localStorage.getItem('sasya_all_products')) || (typeof defaultProducts !== 'undefined' ? defaultProducts : []);
+    
+    // 2. యాక్టివ్ డిస్కౌంట్‌లను లోడ్ చేయడం
+    let activeDiscounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
+
+    return allProducts.map(product => {
+        let discountInfo = activeDiscounts[product.id];
+        if (discountInfo) {
+            return {
+                ...product,
+                originalPrice: product.price, // పాత ధర
+                price: discountInfo.offerPrice, // ఆఫర్ ధర
+                discountTag: discountInfo.tag,  // డిస్కౌంట్ ట్యాగ్
+                isDealOfDay: discountInfo.isDealOfDay || false, // Deal of the Day అవునో కాదో
+                hasDiscount: true
+            };
+        }
+        return { ...product, hasDiscount: false };
+    });
+}
+
+// 🎯 2. Special Offers & Deal of the Day సెక్షన్లను హోమ్‌పేజీలో డిస్‌ప్లే చేసే ఫంక్షన్
+function renderOffersAndDeals() {
+    const productsWithOffers = getProductsWithDiscounts();
+    
+    const specialOffersContainer = document.getElementById('special-offers-grid');
+    const dealOfDayContainer = document.getElementById('deal-of-day-grid');
+
+    // 1. Special Offers Rendering (isDealOfDay చెక్ చేయబడని ఆఫర్లు)
+    const specialOffers = productsWithOffers.filter(p => p.hasDiscount && !p.isDealOfDay);
+    if (specialOffersContainer) {
+        if (specialOffers.length === 0) {
+            specialOffersContainer.innerHTML = `<p style="color:#666; text-align:center; grid-column: 1/-1;">ప్రస్తుతం ప్రత్యేక ఆఫర్లు ఏవీ లేవు.</p>`;
+        } else {
+            specialOffersContainer.innerHTML = specialOffers.map(p => createOfferCardHTML(p, '#dc2626')).join('');
+        }
+    }
+
+    // 2. Deal of the Day Rendering (isDealOfDay: true ఉన్నవి)
+    const dealsOfDay = productsWithOffers.filter(p => p.isDealOfDay);
+    if (dealOfDayContainer) {
+        if (dealsOfDay.length === 0) {
+            dealOfDayContainer.innerHTML = `<p style="color:#666; text-align:center; grid-column: 1/-1;">ఈ రోజు Deal of the Day ఆఫర్లు లేవు.</p>`;
+        } else {
+            dealOfDayContainer.innerHTML = dealsOfDay.map(p => createOfferCardHTML(p, '#b78103')).join('');
+        }
+    }
+}
+
+// 🛒 3. ఆఫర్ ప్రొడక్ట్ కార్డ్ HTML డిజైన్
+function createOfferCardHTML(product, badgeColor) {
+    return `
+        <div class="product-card" style="border: 1px solid #e5e7eb; position: relative; background: white; padding: 12px; border-radius: 8px;">
+            <span style="position: absolute; top: 10px; left: 10px; background: ${badgeColor}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+                ${product.discountTag || 'OFFER'}
+            </span>
+            <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px;">
+            <h3 style="font-size: 15px; margin: 10px 0 5px 0;">${product.name}</h3>
+            <div style="margin-bottom: 10px;">
+                <span style="font-size: 16px; font-weight: bold; color: #166534;">₹${product.price}</span>
+                <span style="text-decoration: line-through; color: #9ca3af; font-size: 12px; margin-left: 5px;">₹${product.originalPrice}</span>
+            </div>
+            <button onclick="addToCart(${product.id})" class="btn" style="width: 100%; background: ${badgeColor}; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                🛒 Add to Cart
+            </button>
+        </div>
+    `;
+}
+
+// 🚀 పేజీ లోడ్ అయినప్పుడు ఆటోమేటిక్‌గా రన్ అవ్వడానికి
+document.addEventListener("DOMContentLoaded", () => {
+    renderOffersAndDeals();
+});
