@@ -775,9 +775,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function goToAdminPortal() {
     let password = prompt("Admin పాస్‌వర్డ్ ఎంటర్ చేయండి:");
     
-    // మీ పాస్‌వర్డ్ (ఉదాహరణకు: 1234)
     if (password === "1234") {
-        window.location.href = "admin.html";
+        // '_blank' ద్వారా కొత్త ట్యాబ్‌లో అడ్మిన్ పేజీ ఓపెన్ అవుతుంది
+        window.open("admin.html", "_blank");
     } else if (password !== null) {
         alert("❌ తప్పు పాస్‌వర్డ్!");
     }
