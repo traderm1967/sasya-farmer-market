@@ -891,3 +891,21 @@ function createOfferCardHTML(product, badgeColor) {
 document.addEventListener("DOMContentLoaded", () => {
     renderOffersAndDeals();
 });
+
+// Admin Tab Switching Function
+function switchAdminTab(tabId) {
+    // 1. అన్ని ట్యాబ్ కంటెంట్లను దాచడం (Hide)
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.style.display = 'none');
+
+    // 2. ఎంచుకున్న ట్యాబ్‌ను మాత్రమే చూపించడం (Show)
+    const activeTab = document.getElementById(tabId);
+    if (activeTab) {
+        activeTab.style.display = 'block';
+    }
+
+    // 3. బటన్ రంగులు/Active status మార్చడం
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+}
