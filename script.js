@@ -772,49 +772,48 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshCurrentPageGrid();
 });
 
+// 1. Admin Portal కొత్త ట్యాబ్‌లో ఓపెన్ అవ్వడానికి
 function goToAdminPortal() {
     let password = prompt("Admin పాస్‌వర్డ్ ఎంటర్ చేయండి:");
-    
     if (password === "1234") {
-        // '_blank' ద్వారా కొత్త ట్యాబ్‌లో అడ్మిన్ పేజీ ఓపెన్ అవుతుంది
         window.open("admin.html", "_blank");
     } else if (password !== null) {
         alert("❌ తప్పు పాస్‌వర్డ్!");
     }
 }
 
-// ఆఫర్ ప్రొడక్ట్‌లను చూపించే ఫంక్షన్
+// 2. Special Offers విభాగంలో ఆఫర్లు ఉన్న ప్రొడక్ట్స్ చూపించడానికి
 function displaySpecialOffers() {
-    const container = document.getElementById("offers-product-grid");
-    if (!container) return;
+    const offersContainer = document.getElementById("offers-product-grid");
+    if (!offersContainer) return;
 
-    // isOffer: true ఉన్న ప్రొడక్ట్‌లను మాత్రమే ఫిల్టర్ చేయడం
-    const offerItems = products.filter(item => item.isOffer === true);
+    // isOffer: true ఉన్న ప్రొడక్ట్‌లను లేదా డిస్కౌంట్ ఉన్న ప్రొడక్ట్‌లను ఫిల్టర్ చేయడం
+    const offerProducts = products.filter(p => p.isOffer === true || p.discount);
 
-    if (offerItems.length === 0) {
-        container.innerHTML = "<p style='color: #666;'>ప్రస్తుతం ఏ ఆఫర్‌లు లేవు.</p>";
+    if (offerProducts.length === 0) {
+        offersContainer.innerHTML = "<p style='color: #666; text-align: center; grid-column: 1/-1;'>ప్రస్తుతం ఏ ఆఫర్‌లు అందుబాటులో లేవు.</p>";
         return;
     }
 
-    container.innerHTML = offerItems.map(item => `
-        <div class="product-card" style="border: 1px solid #fecaca; position: relative; background: white; padding: 15px; border-radius: 8px;">
+    offersContainer.innerHTML = offerProducts.map(product => `
+        <div class="product-card" style="border: 1px solid #fecaca; position: relative; background: white; padding: 12px; border-radius: 8px;">
             <span style="position: absolute; top: 10px; left: 10px; background: #dc2626; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
-                ${item.discount || '15% OFF'}
+                ${product.discount || '15% OFF'}
             </span>
-            <img src="${item.image}" alt="${item.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px;">
-            <h3 style="font-size: 16px; margin: 10px 0 5px 0;">${item.name}</h3>
+            <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px;">
+            <h3 style="font-size: 15px; margin: 10px 0 5px 0;">${product.name}</h3>
             <div style="margin-bottom: 10px;">
-                <span style="font-size: 16px; font-weight: bold; color: #166534;">₹${item.price}</span>
-                ${item.originalPrice ? `<span style="text-decoration: line-through; color: #9ca3af; font-size: 13px; margin-left: 5px;">₹${item.originalPrice}</span>` : ''}
+                <span style="font-size: 16px; font-weight: bold; color: #166534;">₹${product.price}</span>
+                ${product.originalPrice ? `<span style="text-decoration: line-through; color: #9ca3af; font-size: 12px; margin-left: 5px;">₹${product.originalPrice}</span>` : ''}
             </div>
-            <button onclick="addToCart(${item.id})" class="btn" style="width: 100%; background: #dc2626; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer;">
+            <button onclick="addToCart(${product.id})" class="btn" style="width: 100%; background: #dc2626; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold;">
                 🛒 Add to Cart
             </button>
         </div>
     `).join("");
 }
 
-// పేజీ లోడ్ కాగానే ఆఫర్లు కనిపించేలా చేయడం
+// పేజీ లోడ్ అయిన వెంటనే ఆఫర్లను లోడ్ చేయడానికి
 document.addEventListener("DOMContentLoaded", () => {
     displaySpecialOffers();
 });
