@@ -817,3 +817,77 @@ function displaySpecialOffers() {
 document.addEventListener("DOMContentLoaded", () => {
     displaySpecialOffers();
 });
+
+// LocalStorage నుండి ఆఫర్ల డేటాను లోడ్ చేసి ఫ్రంట్-ఎండ్ ప్రొడక్ట్స్‌కు వర్తింపజేసే ఫంక్షన్
+function getProductsWithDiscounts() {
+    let allProducts = JSON.parse(localStorage.getItem('sasya_all_products')) || defaultProducts;
+    let activeDiscounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
+
+    return allProducts.map(product => {
+        let discountInfo = activeDiscounts[product.id];
+        if (discountInfo) {
+            return {
+                ...product,
+                originalPrice: product.price,
+                price: discountInfo.offerPrice,
+                discountTag: discountInfo.tag,
+                isDealOfDay: discountInfo.isDealOfDay || false,
+                hasDiscount: true
+            };
+        }
+        return { ...product, hasDiscount: false };
+    });
+}
+
+// Special Offers మరియు Deal of the Day సెక్షన్లను రెండర్ చేసే ఫంక్షన్
+function renderOffersAndDeals() {
+    const productsWithOffers = getProductsWithDiscounts();
+    
+    const specialOffersContainer = document.getElementById('special-offers-grid');
+    const dealOfDayContainer = document.getElementById('deal-of-day-grid');
+
+    // 1. Special Offers (డిస్కౌంట్ ఉన్న అన్ని ప్రొడక్ట్లు)
+    const specialOffers = productsWithOffers.filter(p => p.hasDiscount && !p.isDealOfDay);
+    if (specialOffersContainer) {
+        if (specialOffers.length === 0) {
+            specialOffersContainer.innerHTML = `<p style="color:#666; text-align:center; grid-column: 1/-1;">ప్రస్తుతం ప్రత్యేక ఆఫర్లు ఏవీ లేవు.</p>`;
+        } else {
+            specialOffersContainer.innerHTML = specialOffers.map(p => createOfferCardHTML(p, '#dc2626')).join('');
+        }
+    }
+
+    // 2. Deal of the Day (స్పెషల్ ఫ్లాష్ సేల్ ప్రొడక్ట్లు)
+    const dealsOfDay = productsWithOffers.filter(p => p.isDealOfDay);
+    if (dealOfDayContainer) {
+        if (dealsOfDay.length === 0) {
+            dealOfDayContainer.innerHTML = `<p style="color:#666; text-align:center; grid-column: 1/-1;">ఈ రోజు Deal of the Day ఆఫర్లు లేవు.</p>`;
+        } else {
+            dealOfDayContainer.innerHTML = dealsOfDay.map(p => createOfferCardHTML(p, '#b78103')).join('');
+        }
+    }
+}
+
+// ప్రొడక్ట్ కార్డ్ డిజైన్ HTML ఫంక్షన్
+function createOfferCardHTML(product, badgeColor) {
+    return `
+        <div class="product-card" style="border: 1px solid #e5e7eb; position: relative; background: white; padding: 12px; border-radius: 8px;">
+            <span style="position: absolute; top: 10px; left: 10px; background: ${badgeColor}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+                ${product.discountTag || 'OFFER'}
+            </span>
+            <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px;">
+            <h3 style="font-size: 15px; margin: 10px 0 5px 0;">${product.name}</h3>
+            <div style="margin-bottom: 10px;">
+                <span style="font-size: 16px; font-weight: bold; color: #166534;">₹${product.price}</span>
+                <span style="text-decoration: line-through; color: #9ca3af; font-size: 12px; margin-left: 5px;">₹${product.originalPrice}</span>
+            </div>
+            <button onclick="addToCart(${product.id})" class="btn" style="width: 100%; background: ${badgeColor}; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                🛒 Add to Cart
+            </button>
+        </div>
+    `;
+}
+
+// పేజీ లోడ్ అయినప్పుడు ఆఫర్లని డిస్‌ప్లే చేయడం
+document.addEventListener("DOMContentLoaded", () => {
+    renderOffersAndDeals();
+});
