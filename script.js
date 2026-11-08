@@ -771,3 +771,14 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAnnouncementBar();
     refreshCurrentPageGrid();
 });
+
+function goToAdminPortal() {
+    let password = prompt("Admin పాస్‌వర్డ్ ఎంటర్ చేయండి:");
+    
+    // మీ పాస్‌వర్డ్ (ఉదాహరణకు: 1234)
+    if (password === "1234") {
+        window.location.href = "admin.html";
+    } else if (password !== null) {
+        alert("❌ తప్పు పాస్‌వర్డ్!");
+    }
+}
