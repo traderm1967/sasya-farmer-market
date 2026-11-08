@@ -782,3 +782,39 @@ function goToAdminPortal() {
         alert("❌ తప్పు పాస్‌వర్డ్!");
     }
 }
+
+// ఆఫర్ ప్రొడక్ట్‌లను చూపించే ఫంక్షన్
+function displaySpecialOffers() {
+    const container = document.getElementById("offers-product-grid");
+    if (!container) return;
+
+    // isOffer: true ఉన్న ప్రొడక్ట్‌లను మాత్రమే ఫిల్టర్ చేయడం
+    const offerItems = products.filter(item => item.isOffer === true);
+
+    if (offerItems.length === 0) {
+        container.innerHTML = "<p style='color: #666;'>ప్రస్తుతం ఏ ఆఫర్‌లు లేవు.</p>";
+        return;
+    }
+
+    container.innerHTML = offerItems.map(item => `
+        <div class="product-card" style="border: 1px solid #fecaca; position: relative; background: white; padding: 15px; border-radius: 8px;">
+            <span style="position: absolute; top: 10px; left: 10px; background: #dc2626; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+                ${item.discount || '15% OFF'}
+            </span>
+            <img src="${item.image}" alt="${item.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px;">
+            <h3 style="font-size: 16px; margin: 10px 0 5px 0;">${item.name}</h3>
+            <div style="margin-bottom: 10px;">
+                <span style="font-size: 16px; font-weight: bold; color: #166534;">₹${item.price}</span>
+                ${item.originalPrice ? `<span style="text-decoration: line-through; color: #9ca3af; font-size: 13px; margin-left: 5px;">₹${item.originalPrice}</span>` : ''}
+            </div>
+            <button onclick="addToCart(${item.id})" class="btn" style="width: 100%; background: #dc2626; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer;">
+                🛒 Add to Cart
+            </button>
+        </div>
+    `).join("");
+}
+
+// పేజీ లోడ్ కాగానే ఆఫర్లు కనిపించేలా చేయడం
+document.addEventListener("DOMContentLoaded", () => {
+    displaySpecialOffers();
+});
