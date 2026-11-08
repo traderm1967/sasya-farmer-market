@@ -305,11 +305,16 @@
             container.innerHTML = html;
         }
 
-        function removeDiscount(id) {
+       function removeDiscount(id) {
             let discounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
             delete discounts[id];
             localStorage.setItem('sasya_active_discounts', JSON.stringify(discounts));
+            
+            // 🔄 బ్రౌజర్ కస్టమ్ ఎవెంట్ (ఇతర ట్యాబ్‌లను నోటిఫై చేస్తుంది)
+            window.dispatchEvent(new Event('storage'));
+            
             renderActiveDiscounts();
+            alert("🗑️ డిస్కౌంట్ తొలగించబడింది & మార్పులు కమిట్ అయ్యాయి!");
         }
 
         window.onload = function() {
