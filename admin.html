@@ -54,6 +54,9 @@
         .rev-card.profit { background: linear-gradient(135deg, #16a34a, #15803d); }
         .rev-card h3 { margin: 0; font-size: 13px; opacity: 0.9; }
         .rev-card p { margin: 5px 0 0 0; font-size: 24px; font-weight: bold; }
+
+        .btn-discount-nav { background: #dc2626; color: white; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-discount-nav:hover { background: #b91c1c; }
     </style>
 </head>
 <body onload="refreshUI()">
@@ -64,12 +67,19 @@
                 <h1 class="brand-title">🌿 Sasya Admin Panel</h1>
             </div>
 
-            <div class="corner-backup-box">
-                <h5>💾 Data Backup</h5>
-                <div class="corner-btn-group">
-                    <button type="button" class="btn-corner-backup" onclick="exportDataBackup()">📥 Backup</button>
-                    <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importDataBackup(event)">
-                    <button type="button" class="btn-corner-restore" onclick="document.getElementById('import-file-input').click()">📤 Restore</button>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <!-- 🏷️ Discount Manager కి వెళ్లే బటన్ -->
+                <a href="discount.html" target="_blank" class="btn-discount-nav">
+                    🏷️ Open Discount Manager
+                </a>
+
+                <div class="corner-backup-box">
+                    <h5>💾 Data Backup</h5>
+                    <div class="corner-btn-group">
+                        <button type="button" class="btn-corner-backup" onclick="exportDataBackup()">📥 Backup</button>
+                        <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importDataBackup(event)">
+                        <button type="button" class="btn-corner-restore" onclick="document.getElementById('import-file-input').click()">📤 Restore</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,6 +91,7 @@
             <button class="tab-btn" onclick="switchTab('farmer-requests-tab', this)">🧑‍🌾 Farmer Requests</button>
             <button class="tab-btn" onclick="switchTab('quick-stock-tab', this)">📊 Pricing & Profit</button>
             <button class="tab-btn" onclick="switchTab('sales-report-tab', this)">📈 Sales Report</button>
+            <button class="tab-btn" style="background: #fee2e2; color: #991b1b;" onclick="window.open('discount.html', '_blank')">🏷️ Open Discounts Panel ➔</button>
         </div>
 
         <!-- TAB 1: Products & Store -->
@@ -298,50 +309,6 @@
             refreshUI();
         }
 
-        function saveSocialLinks() {
-            const socialData = {
-                whatsapp: document.getElementById('admin-whatsapp').value.trim() || "918977881224",
-                phone: document.getElementById('admin-phone').value.trim() || "8977881224",
-                instagram: document.getElementById('admin-instagram').value.trim() || "#",
-                facebook: document.getElementById('admin-facebook').value.trim() || "#"
-            };
-            localStorage.setItem('sasya_social_links', JSON.stringify(socialData));
-            alert("✅ సోషల్ మీడియా లింక్‌లు విజయవంతంగా సేవ్ అయ్యాయి!");
-        }
-
-        function loadSocialLinksInput() {
-            let savedData = JSON.parse(localStorage.getItem('sasya_social_links')) || {};
-            if(document.getElementById('admin-whatsapp')) document.getElementById('admin-whatsapp').value = savedData.whatsapp || "";
-            if(document.getElementById('admin-phone')) document.getElementById('admin-phone').value = savedData.phone || "";
-            if(document.getElementById('admin-instagram')) document.getElementById('admin-instagram').value = savedData.instagram || "";
-            if(document.getElementById('admin-facebook')) document.getElementById('admin-facebook').value = savedData.facebook || "";
-        }
-
-        function saveAnnouncementBar() {
-            const announcementData = {
-                text: document.getElementById('admin-announcement-text').value.trim() || "🌿 Welcome to Sasya Farmer Market",
-                link: document.getElementById('admin-announcement-link').value.trim() || "vegetables.html",
-                active: document.getElementById('admin-announcement-active').checked
-            };
-            localStorage.setItem('sasya_announcement', JSON.stringify(announcementData));
-            alert("✅ అనౌన్స్‌మెంట్ బార్ విజయవంతంగా సేవ్ చేయబడింది!");
-        }
-
-        function loadAnnouncementInput() {
-            let saved = JSON.parse(localStorage.getItem('sasya_announcement')) || { text: "", link: "", active: true };
-            if(document.getElementById('admin-announcement-text')) document.getElementById('admin-announcement-text').value = saved.text;
-            if(document.getElementById('admin-announcement-link')) document.getElementById('admin-announcement-link').value = saved.link;
-            if(document.getElementById('admin-announcement-active')) document.getElementById('admin-announcement-active').checked = saved.active;
-        }
-
-        function updateDashboardStats() {
-            document.getElementById('stat-total').innerText = products.length;
-            document.getElementById('stat-veg').innerText = products.filter(p => p.category === 'vegetables').length;
-            document.getElementById('stat-fruits').innerText = products.filter(p => p.category === 'fruits').length;
-            document.getElementById('stat-grains').innerText = products.filter(p => p.category === 'grains').length;
-            document.getElementById('stat-pulses').innerText = products.filter(p => p.category === 'pulses').length;
-        }
-
         function renderAdminStockManager() {
             const container = document.getElementById('stock-management-list');
             if (!container) return;
@@ -395,8 +362,6 @@
             }
         }
 
-        
-        // 🧑‍🌾 Farmer Requests: Approve to Stock or Reject
         function loadFarmerRequestsAdmin() {
             const container = document.getElementById('admin-farmer-requests');
             if (!container) return;
@@ -434,7 +399,6 @@
             container.innerHTML = html;
         }
 
-        // 1. Approve to Stock Only (Direct ga website lo publish avvadu)
         function approveFarmerToStock(index) {
             let requests = JSON.parse(localStorage.getItem('farmer_requests')) || [];
             let req = requests[index];
@@ -447,17 +411,16 @@
                 name: req.name,
                 category: req.category,
                 costPrice: Number(req.price),
-                price: Number(req.price) + 10, // Default tentative margin
+                price: Number(req.price) + 10,
                 unit: req.unit,
                 image: req.image,
                 stock: Number(req.quantity) || 20,
-                isPublished: false // 🛑 వెబ్‌సైట్‌లో ఇక్కడ కనిపించదు, కేవలం stock లోకి వెళుతుంది
+                isPublished: false
             };
 
             products.unshift(newProductObj);
             localStorage.setItem('sasya_all_products', JSON.stringify(products));
 
-            // Update History Status
             let masterDirectory = JSON.parse(localStorage.getItem('sasya_all_farmer_submissions')) || [];
             masterDirectory.forEach(item => {
                 if(item.id === req.id || (item.farmerName === req.farmer && item.productName === req.name)) {
@@ -466,15 +429,13 @@
             });
             localStorage.setItem('sasya_all_farmer_submissions', JSON.stringify(masterDirectory));
 
-            // Remove from pending
             requests.splice(index, 1);
             localStorage.setItem('farmer_requests', JSON.stringify(requests));
 
-            alert(`✅ ${req.name} స్టాక్‌లోకి చేర్చబడింది! ఇది ఇ现在的 వెబ్‌సైట్‌లో కనిపించదు. మీరు 'Pricing & Profit' ట్యాబ్‌లో ధర మార్చి Publish చేసుకోవచ్చు.`);
+            alert(`✅ ${req.name} స్టాక్‌లోకి చేర్చబడింది! ఇది నేరుగా వెబ్‌సైట్‌లో కనిపించదు. మీరు 'Pricing & Profit' ట్యాబ్‌లో ధర మార్చి Publish చేసుకోవచ్చు.`);
             refreshUI();
         }
 
-        // 2. Reject Farmer Request
         function rejectFarmerProduct(index) {
             let requests = JSON.parse(localStorage.getItem('farmer_requests')) || [];
             let req = requests[index];
@@ -554,6 +515,50 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
+        }
+
+        function saveSocialLinks() {
+            const socialData = {
+                whatsapp: document.getElementById('admin-whatsapp').value.trim() || "918977881224",
+                phone: document.getElementById('admin-phone').value.trim() || "8977881224",
+                instagram: document.getElementById('admin-instagram').value.trim() || "#",
+                facebook: document.getElementById('admin-facebook').value.trim() || "#"
+            };
+            localStorage.setItem('sasya_social_links', JSON.stringify(socialData));
+            alert("✅ సోషల్ మీడియా లింక్‌లు విజయవంతంగా సేవ్ అయ్యాయి!");
+        }
+
+        function loadSocialLinksInput() {
+            let savedData = JSON.parse(localStorage.getItem('sasya_social_links')) || {};
+            if(document.getElementById('admin-whatsapp')) document.getElementById('admin-whatsapp').value = savedData.whatsapp || "";
+            if(document.getElementById('admin-phone')) document.getElementById('admin-phone').value = savedData.phone || "";
+            if(document.getElementById('admin-instagram')) document.getElementById('admin-instagram').value = savedData.instagram || "";
+            if(document.getElementById('admin-facebook')) document.getElementById('admin-facebook').value = savedData.facebook || "";
+        }
+
+        function saveAnnouncementBar() {
+            const announcementData = {
+                text: document.getElementById('admin-announcement-text').value.trim() || "🌿 Welcome to Sasya Farmer Market",
+                link: document.getElementById('admin-announcement-link').value.trim() || "vegetables.html",
+                active: document.getElementById('admin-announcement-active').checked
+            };
+            localStorage.setItem('sasya_announcement', JSON.stringify(announcementData));
+            alert("✅ అనౌన్స్‌మెంట్ బార్ విజయవంతంగా సేవ్ చేయబడింది!");
+        }
+
+        function loadAnnouncementInput() {
+            let saved = JSON.parse(localStorage.getItem('sasya_announcement')) || { text: "", link: "", active: true };
+            if(document.getElementById('admin-announcement-text')) document.getElementById('admin-announcement-text').value = saved.text;
+            if(document.getElementById('admin-announcement-link')) document.getElementById('admin-announcement-link').value = saved.link;
+            if(document.getElementById('admin-announcement-active')) document.getElementById('admin-announcement-active').checked = saved.active;
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('stat-total').innerText = products.length;
+            document.getElementById('stat-veg').innerText = products.filter(p => p.category === 'vegetables').length;
+            document.getElementById('stat-fruits').innerText = products.filter(p => p.category === 'fruits').length;
+            document.getElementById('stat-grains').innerText = products.filter(p => p.category === 'grains').length;
+            document.getElementById('stat-pulses').innerText = products.filter(p => p.category === 'pulses').length;
         }
 
         function refreshUI(filteredList = null, isSearching = false) {
