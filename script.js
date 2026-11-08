@@ -986,3 +986,12 @@ function createOfferCardHTML(product, badgeColor) {
 document.addEventListener("DOMContentLoaded", () => {
     renderOffersAndDeals();
 });
+
+// ⚡ discount.html లో డిస్కౌంట్ మారగానే index.html లో ఆటో-రీలోడ్ అయ్యే లాజిక్
+window.addEventListener('storage', (e) => {
+    if (e.key === 'sasya_active_discounts' || e.key === 'sasya_all_products' || !e.key) {
+        if (typeof renderOffersAndDeals === 'function') {
+            renderOffersAndDeals();
+        }
+    }
+});
