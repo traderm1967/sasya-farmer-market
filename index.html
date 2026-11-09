@@ -10,6 +10,13 @@
 </head>
 <body>
 
+    <!-- Top Dynamic Announcement Bar -->
+    <a id="top-announcement-bar" href="index.html" style="display: none; text-decoration: none; width: 100%;">
+        <div style="background: linear-gradient(90deg, #dc2626, #b91c1c); color: #ffffff; text-align: center; padding: 10px 15px; font-size: 15px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer;">
+            🔥 <span style="background: #facc15; color: #000000; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 6px;">ANNOUNCEMENT</span> <span id="announcement-text-content"></span> ➔
+        </div>
+    </a>
+
     <!-- Header Navbar -->
     <nav class="navbar">
         <div class="logo-container" onclick="window.location.href='index.html'">
@@ -35,19 +42,12 @@
             </div>
 
             <!-- Cart Button -->
-            <div class="icon-btn cart-btn" onclick="toggleCart()">
+            <div class="icon-btn cart-btn" onclick="openCart()">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span id="cart-count" class="cart-badge">0</span>
             </div>
         </div>
     </nav>
-
-    <!-- 🎯 Top Announcement Offer Bar -->
-    <a href="#offers-section-container" style="display: block !important; text-decoration: none !important; width: 100%;">
-        <div style="background: linear-gradient(90deg, #dc2626, #b91c1c) !important; color: #ffffff !important; text-align: center !important; padding: 12px 15px !important; font-size: 16px !important; font-weight: bold !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer;">
-            🔥 <span style="background: #facc15; color: #000000; padding: 2px 8px; border-radius: 4px; font-size: 13px; margin-right: 6px;">SPECIAL OFFER</span> 🎉 ప్రత్యేక ఆఫర్! అన్ని ఆర్డర్లపై 15% డిస్కౌంట్ పొందండి! ➔
-        </div>
-    </a>
         
     <!-- Tirupati Door Delivery Marquee Notice -->
     <div style="background: linear-gradient(135deg, #fef08a, #fde047); border-bottom: 2px solid #eab308; padding: 10px 0; overflow: hidden; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
@@ -101,20 +101,40 @@
         </div>
     </section>
 
-    <!-- 🎯 1. కొత్తగా చేర్చిన Special Offers & Deal of the Day Section -->
-    <section id="offers-section-container" style="max-width: 1100px; margin: 30px auto; padding: 0 15px;">
-        <div style="background: linear-gradient(135deg, #fef2f2, #ffe4e6); border: 2px dashed #ef4444; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 style="color: #991b1b; margin: 0; font-size: 22px; display: flex; align-items: center; gap: 8px;">
-                    🔥 Special Offers & Deal of the Day
-                </h2>
-                <span style="background: #ef4444; color: white; font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px;">
-                    LIMITED TIME ONLY
-                </span>
+    <!-- 🎯 1. Flash Deals Section with Timer -->
+    <section id="flash-deals-section" style="max-width: 1100px; margin: 25px auto 10px auto; padding: 0 15px;">
+        <div style="background: linear-gradient(135deg, #2d6a4f, #1b4332); border-radius: 12px; padding: 15px 20px; color: white; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <div>
+                <h3 style="margin: 0; font-size: 20px; color: #facc15; display: flex; align-items: center; gap: 8px;">
+                    ⚡ Flash Deals of the Day
+                </h3>
+                <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">పరిమిత సమయం వరకు మాత్రమే అదనపు తగ్గింపు ధరలు!</p>
             </div>
 
-            <!-- ఆఫర్ ఉన్న ప్రొడక్ట్స్ ఇక్కడ లోడ్ అవుతాయి -->
-            <div id="offers-product-grid" class="product-grid"></div>
+            <!-- Countdown Timer -->
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.25); padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+                <span style="font-size: 12px; font-weight: bold;">Ends in:</span>
+                <span id="timer-hours" style="background: #dc2626; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 13px;">04</span>:
+                <span id="timer-mins" style="background: #dc2626; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 13px;">00</span>:
+                <span id="timer-secs" style="background: #dc2626; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 13px;">00</span>
+            </div>
+        </div>
+
+        <div id="deal-product-container" style="margin-top: 12px;"></div>
+    </section>
+
+    <!-- 🎯 2. Special Discounts Grid Container -->
+    <section id="offers-section-container" style="max-width: 1100px; margin: 20px auto; padding: 0 15px;">
+        <div style="background: #f8fafc; border: 2px dashed #86efac; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="color: #14532d; margin: 0; font-size: 20px;">
+                    🏷️ Active Special Discounts
+                </h2>
+                <a href="discount.html" target="_blank" style="color: #2d6a4f; text-decoration: none; font-size: 13px; font-weight: bold;">Manage Discounts ➔</a>
+            </div>
+
+            <!-- Discount Manager నుండి వచ్చే ప్రొడక్ట్స్ ఇక్కడ లోడ్ అవుతాయి -->
+            <div id="offers-wrapper" style="overflow-x: auto; white-space: nowrap; padding-bottom: 10px;"></div>
         </div>
     </section>
 
@@ -122,7 +142,7 @@
     <section id="products" class="products-section">
         <div style="display:flex; justify-content:space-between; align-items:center; max-width:1100px; margin:0 auto 15px auto; padding:0 15px;">
             <h2 class="section-title" style="margin:0;">Our Fresh Products</h2>
-            <button onclick="localStorage.clear(); location.reload();" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:12px;">🔄 Reset Storage Cache</button>
+            <button onclick="localStorage.removeItem('sasya_all_products'); location.reload();" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:12px;">🔄 Reset Storage Cache</button>
         </div>
         
         <!-- Category Cards Grid -->
@@ -168,7 +188,7 @@
     <div id="cart-sidebar" class="cart-sidebar">
         <div class="cart-header">
             <h3>🛒 Your Shopping Cart</h3>
-            <button class="close-cart-btn" onclick="toggleCart()">✖</button>
+            <button class="close-cart-btn" onclick="closeCart()">✖</button>
         </div>
         <div id="cart-items-container" class="cart-body"></div>
         <div class="cart-footer">
@@ -179,7 +199,7 @@
             <button class="btn checkout-btn" onclick="placeDirectOrder()">Proceed to Checkout</button>
         </div>
     </div>
-    <div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
+    <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
 
     <!-- Footer Section -->
     <footer class="footer-section">
@@ -216,7 +236,7 @@
         </div>
     </footer>
 
-    <!-- Script Integration with forced version update -->
-    <script src="script.js?v=999.0"></script>
+    <!-- Script Integration -->
+    <script src="script.js?v=1000.0"></script>
 </body>
 </html>
