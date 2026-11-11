@@ -183,8 +183,7 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     grid.innerHTML = menuHTML;
 }
 
-// 4. Flash Sale and Special Offers Dynamic Renderer
-let dealIntervalId = null;
+let offerScrollInterval = null;
 
 function renderFlashSaleAndOffers() {
     let productsWithOffers = getProductsWithDiscounts();
@@ -230,17 +229,17 @@ function renderFlashSaleAndOffers() {
         }
     }
     
-    // Active Special Offers Horizontal List
+    // Active Special Offers Auto-Scrolling List
     if (offersWrapper) {
         if (activeOffers.length > 0) {
             let offersHTML = activeOffers.map(p => {
                 let imgSrc = getValidImage(p.image);
                 return `
-                    <div class="offer-card" onclick="openQuickView(${p.id})" style="cursor:pointer; background:white; border:1px solid #86efac; border-radius:8px; padding:8px; display:inline-block; margin-right:10px; width:140px; text-align:center;">
+                    <div class="offer-card" onclick="openQuickView(${p.id})" style="cursor:pointer; background:white; border:1px solid #86efac; border-radius:8px; padding:8px; display:inline-block; margin-right:12px; width:140px; text-align:center; vertical-align:top;">
                         <img src="${imgSrc}" alt="${p.name}" class="offer-img" style="width:70px; height:70px; object-fit:contain;">
                         <div class="offer-details" style="margin-top:5px;">
-                            <span class="offer-badge" style="background:#dc2626; color:white; font-size:9px; padding:1px 4px; border-radius:3px;">${p.discountTag}</span>
-                            <h4 style="margin:4px 0 2px 0; font-size:12px; color:#14532d;">${p.name}</h4>
+                            <span class="offer-badge" style="background:#dc2626; color:white; font-size:9px; padding:1px 5px; border-radius:3px; font-weight:bold;">${p.discountTag}</span>
+                            <h4 style="margin:4px 0 2px 0; font-size:12px; color:#14532d; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${p.name}</h4>
                             <p class="offer-price-line" style="margin:0; font-size:11px; color:#166534;">
                                 <strong>₹${p.price}</strong>/${p.unit || 'kg'} 
                                 <span class="original-price" style="text-decoration:line-through; color:#888;">₹${p.originalPrice}</span>
@@ -249,13 +248,35 @@ function renderFlashSaleAndOffers() {
                     </div>
                 `;
             }).join('');
-            offersWrapper.innerHTML = offersHTML; 
+
+            offersWrapper.innerHTML = offersHTML;
+            startAutoScrollOffers(offersWrapper);
         } else {
             offersWrapper.innerHTML = '<p style="color:#666; font-size:13px; padding:10px;">ప్రస్తుతం ప్రత్యేక ఆఫర్లు ఏవీ లేవు.</p>';
         }
     }
 }
 
+// Special Discounts Auto-Scroll Functionality
+function startAutoScrollOffers(container) {
+    if (offerScrollInterval) clearInterval(offerScrollInterval);
+    
+    let step = 1;
+    offerScrollInterval = setInterval(() => {
+        if (!container) return;
+        
+        // చివరి వరకు వెళ్లాక మళ్లీ మొదటికి రావడం
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+            container.scrollLeft = 0;
+        } else {
+            container.scrollLeft += step;
+        }
+    }, 30); // ప్రశాంతంగా స్క్రోల్ అవ్వడానికి Speed 30ms
+
+    // యూజర్ మాઉસ పైకి పెడితే స్క్రోలింగ్ ఆగడం, తీసేస్తే మళ్లీ స్క్రోల్ అవ్వడం
+    container.addEventListener('mouseenter', () => clearInterval(offerScrollInterval));
+    container.addEventListener('mouseleave', () => startAutoScrollOffers(container));
+}
 // 5. Timer & Announcement
 function startFlashTimer() {
     function updateTimerDisplay() {
