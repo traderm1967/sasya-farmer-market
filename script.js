@@ -1,6 +1,6 @@
 const OWNER_WHATSAPP_NUMBER = "918977881224";
 
-// 1. Master Products Catalog (All 42 Products Fixed)
+// 1. Master Products Catalog
 const defaultProducts = [
     // 🥦 VEGETABLES
     { id: 101, name: "Tomato", category: "vegetables", price: 40, costPrice: 30, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
@@ -52,6 +52,8 @@ let products = [];
 let cart = [];
 let wishlist = [];
 let orderHistory = [];
+let offerScrollInterval = null;
+let dealIntervalId = null;
 
 try {
     cart = JSON.parse(localStorage.getItem('sasya_cart_items')) || [];
@@ -84,7 +86,7 @@ function getValidImage(imgSrc) {
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
 
-// 2. LocalStorage నుండి Discounts పొందడం (String vs Number Handling)
+// 2. LocalStorage నుండి Discounts పొందడం (String & Number ID Support)
 function getProductsWithDiscounts() {
     initProducts();
     let activeDiscounts = {};
@@ -93,7 +95,6 @@ function getProductsWithDiscounts() {
     } catch(e) { activeDiscounts = {}; }
 
     return products.map(product => {
-        // Checking both String and Number keys
         let discountInfo = activeDiscounts[product.id] || activeDiscounts[String(product.id)];
         
         if (discountInfo) {
@@ -183,8 +184,7 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     grid.innerHTML = menuHTML;
 }
 
-let offerScrollInterval = null;
-
+// 4. Flash Deals and Auto-Scrolling Special Offers Renderer
 function renderFlashSaleAndOffers() {
     let productsWithOffers = getProductsWithDiscounts();
     let dealContainer = document.getElementById('deal-product-container');
@@ -193,7 +193,7 @@ function renderFlashSaleAndOffers() {
     let activeDeals = productsWithOffers.filter(p => p.hasDiscount && p.isDealOfDay);
     let activeOffers = productsWithOffers.filter(p => p.hasDiscount && !p.isDealOfDay);
 
-    // Deal of the Day Rendering
+    // Flash Deals of the Day Slide
     if (dealContainer) {
         if (activeDeals.length > 0) {
             let dealSlidesHTML = activeDeals.map(p => {
@@ -229,7 +229,7 @@ function renderFlashSaleAndOffers() {
         }
     }
     
-    // Active Special Offers Auto-Scrolling List
+    // Active Special Offers Auto-Scrolling Container
     if (offersWrapper) {
         if (activeOffers.length > 0) {
             let offersHTML = activeOffers.map(p => {
@@ -257,26 +257,24 @@ function renderFlashSaleAndOffers() {
     }
 }
 
-// Special Discounts Auto-Scroll Functionality
+// 🔄 Auto-Scroll Function for Special Discounts
 function startAutoScrollOffers(container) {
     if (offerScrollInterval) clearInterval(offerScrollInterval);
     
     let step = 1;
     offerScrollInterval = setInterval(() => {
         if (!container) return;
-        
-        // చివరి వరకు వెళ్లాక మళ్లీ మొదటికి రావడం
         if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
             container.scrollLeft = 0;
         } else {
             container.scrollLeft += step;
         }
-    }, 30); // ప్రశాంతంగా స్క్రోల్ అవ్వడానికి Speed 30ms
+    }, 30);
 
-    // యూజర్ మాઉસ పైకి పెడితే స్క్రోలింగ్ ఆగడం, తీసేస్తే మళ్లీ స్క్రోల్ అవ్వడం
-    container.addEventListener('mouseenter', () => clearInterval(offerScrollInterval));
-    container.addEventListener('mouseleave', () => startAutoScrollOffers(container));
+    container.onmouseenter = () => clearInterval(offerScrollInterval);
+    container.onmouseleave = () => startAutoScrollOffers(container);
 }
+
 // 5. Timer & Announcement
 function startFlashTimer() {
     function updateTimerDisplay() {
@@ -331,7 +329,7 @@ function renderAnnouncementBar() {
     }
 }
 
-// 6. Search, Filter and Cart Logic
+// 6. Search & Cart Operations
 function searchProducts() {
     let input = document.getElementById('search-input');
     if (!input) return;
@@ -503,7 +501,7 @@ function injectDeliveryAndCheckout() {
     }
 }
 
-// 7. Checkout & Modal Actions
+// 7. Order & Modal Actions
 function saveOrderToHistory(customerData) {
     let newOrder = {
         id: "ORD" + Math.floor(100000 + Math.random() * 900000),
@@ -760,7 +758,7 @@ function refreshCurrentPageGrid() {
     renderCategoryPageProducts(category);
 }
 
-// 8. Dom Content Loaded Initialization & Real-Time Storage Listener
+// 8. Initialization & Real-Time Sync
 document.addEventListener('DOMContentLoaded', () => {
     initProducts();
     updateCartUI();
@@ -770,7 +768,6 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshCurrentPageGrid();
 });
 
-// Real-Time Storage Event Listener for Live Discount Sync across Tabs
 window.addEventListener('storage', (e) => {
     if (!e.key || e.key === 'sasya_active_discounts' || e.key === 'sasya_all_products' || e.key === 'sasya_announcement') {
         renderFlashSaleAndOffers();
