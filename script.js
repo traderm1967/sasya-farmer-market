@@ -52,7 +52,6 @@ let products = [];
 let cart = [];
 let wishlist = [];
 let orderHistory = [];
-let offerScrollInterval = null;
 let dealIntervalId = null;
 
 try {
@@ -86,7 +85,7 @@ function getValidImage(imgSrc) {
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
 
-// 2. LocalStorage నుండి Discounts పొందడం (String & Number ID Support)
+// 2. LocalStorage నుండి Discounts పొందడం
 function getProductsWithDiscounts() {
     initProducts();
     let activeDiscounts = {};
@@ -183,21 +182,59 @@ function renderCategoryPageProducts(categoryName, customList = null) {
     menuHTML += `</div>`;
     grid.innerHTML = menuHTML;
 }
+
+// 4. Flash Deals and Special Offers Renderer
 function renderFlashSaleAndOffers() {
     let productsWithOffers = getProductsWithDiscounts();
+    let dealContainer = document.getElementById('deal-product-container');
     let offersWrapper = document.getElementById('offers-wrapper');
 
+    let activeDeals = productsWithOffers.filter(p => p.hasDiscount && p.isDealOfDay);
     let activeOffers = productsWithOffers.filter(p => p.hasDiscount && !p.isDealOfDay);
 
-    if (offersWrapper) {
-        if (activeOffers.length > 0) {
-            // స్మూత్ లూపింగ్ కోసం ఆఫర్లను రెట్టింపు (Duplicate) చేయడం
-            let displayList = activeOffers.length < 5 ? [...activeOffers, ...activeOffers, ...activeOffers, ...activeOffers] : [...activeOffers, ...activeOffers];
-
-            let offersHTML = displayList.map(p => {
+    // Flash Deals of the Day Slide
+    if (dealContainer) {
+        if (activeDeals.length > 0) {
+            let dealSlidesHTML = activeDeals.map(p => {
                 let imgSrc = getValidImage(p.image);
                 return `
-                    <div class="offer-card-item" onclick="openQuickView(${p.id})" style="cursor:pointer;">
+                    <div class="deal-card-slide" onclick="openQuickView(${p.id})" style="cursor:pointer; display:none; align-items:center; gap:10px; background:rgba(255,255,255,0.12); padding:6px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.25); width:fit-content; max-width:340px; box-sizing:border-box;">
+                        <img src="${imgSrc}" alt="${p.name}" class="deal-img" style="width:50px; height:50px; object-fit:contain;">
+                        <div class="deal-details">
+                            <h3 style="margin:0; font-size:13px; color:white;">${p.name} <span class="deal-tag" style="background:#ee5253; padding:1px 5px; border-radius:3px; font-size:10px;">${p.discountTag}</span></h3>
+                            <p class="deal-price-line" style="margin:2px 0 0 0; font-size:12px; color:white;">
+                                <strong>₹${p.price}</strong> / ${p.unit || 'kg'} 
+                                <span class="original-price" style="text-decoration:line-through; opacity:0.7;">₹${p.originalPrice}</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            dealContainer.innerHTML = dealSlidesHTML;
+            let slides = dealContainer.querySelectorAll('.deal-card-slide');
+            let currentSlide = 0;
+            if (slides.length > 0) slides[0].style.display = 'flex';
+            if (dealIntervalId) clearInterval(dealIntervalId);
+            if (slides.length > 1) {
+                dealIntervalId = setInterval(() => {
+                    slides[currentSlide].style.display = 'none';
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].style.display = 'flex';
+                }, 3000);
+            }
+        } else {
+            dealContainer.innerHTML = '<p style="color:#e2e8f0; font-size:12px; margin:0;">ప్రస్తుతం డీల్స్ ఏవీ లేవు.</p>';
+        }
+    }
+    
+    // Active Special Offers inside Marquee
+    if (offersWrapper) {
+        if (activeOffers.length > 0) {
+            let offersHTML = activeOffers.map(p => {
+                let imgSrc = getValidImage(p.image);
+                return `
+                    <div class="offer-card-item" onclick="openQuickView(${p.id})">
                         <img src="${imgSrc}" alt="${p.name}" style="width:70px; height:70px; object-fit:contain;">
                         <div style="margin-top:5px;">
                             <span style="background:#dc2626; color:white; font-size:9px; padding:2px 5px; border-radius:3px; font-weight:bold;">${p.discountTag}</span>
@@ -216,52 +253,6 @@ function renderFlashSaleAndOffers() {
             offersWrapper.innerHTML = '<p style="color:#666; font-size:13px; padding:10px;">ప్రస్తుతం ప్రత్యేక ఆఫర్లు ఏవీ లేవు.</p>';
         }
     }
-}
-
-    // Active Special Offers Auto-Scrolling Container
-    if (offersWrapper) {
-        if (activeOffers.length > 0) {
-            let offersHTML = activeOffers.map(p => {
-                let imgSrc = getValidImage(p.image);
-                return `
-                    <div class="offer-card" onclick="openQuickView(${p.id})" style="cursor:pointer; background:white; border:1px solid #86efac; border-radius:8px; padding:8px; display:inline-block; margin-right:12px; width:140px; text-align:center; vertical-align:top;">
-                        <img src="${imgSrc}" alt="${p.name}" class="offer-img" style="width:70px; height:70px; object-fit:contain;">
-                        <div class="offer-details" style="margin-top:5px;">
-                            <span class="offer-badge" style="background:#dc2626; color:white; font-size:9px; padding:1px 5px; border-radius:3px; font-weight:bold;">${p.discountTag}</span>
-                            <h4 style="margin:4px 0 2px 0; font-size:12px; color:#14532d; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${p.name}</h4>
-                            <p class="offer-price-line" style="margin:0; font-size:11px; color:#166534;">
-                                <strong>₹${p.price}</strong>/${p.unit || 'kg'} 
-                                <span class="original-price" style="text-decoration:line-through; color:#888;">₹${p.originalPrice}</span>
-                            </p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            offersWrapper.innerHTML = offersHTML;
-            startAutoScrollOffers(offersWrapper);
-        } else {
-            offersWrapper.innerHTML = '<p style="color:#666; font-size:13px; padding:10px;">ప్రస్తుతం ప్రత్యేక ఆఫర్లు ఏవీ లేవు.</p>';
-        }
-    }
-}
-
-// 🔄 Auto-Scroll Function for Special Discounts
-function startAutoScrollOffers(container) {
-    if (offerScrollInterval) clearInterval(offerScrollInterval);
-    
-    let step = 1;
-    offerScrollInterval = setInterval(() => {
-        if (!container) return;
-        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
-            container.scrollLeft = 0;
-        } else {
-            container.scrollLeft += step;
-        }
-    }, 30);
-
-    container.onmouseenter = () => clearInterval(offerScrollInterval);
-    container.onmouseleave = () => startAutoScrollOffers(container);
 }
 
 // 5. Timer & Announcement
@@ -722,15 +713,6 @@ function openOrderHistoryModal() {
 function closeOrderHistoryModal() {
     const modal = document.getElementById('order-history-modal');
     if (modal) modal.style.display = 'none';
-}
-
-function goToAdminPortal() {
-    let password = prompt("Admin పాస్‌వర్డ్ ఎంటర్ చేయండి:");
-    if (password === "1234") {
-        window.open("admin.html", "_blank");
-    } else if (password !== null) {
-        alert("❌ తప్పు పాస్‌వర్డ్!");
-    }
 }
 
 function getCurrentPageCategory() {
