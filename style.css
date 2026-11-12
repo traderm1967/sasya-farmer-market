@@ -93,7 +93,7 @@ body {
 
 /* --- Hero Section --- */
 .hero, .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('image/my-home.jpg') center/cover no-repeat !important;
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('images/my-home.jpg') center/cover no-repeat !important;
     height: 600px !important;
     display: flex !important;
     align-items: center !important;
