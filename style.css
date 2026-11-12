@@ -361,7 +361,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Mobile Responsive 2-Column Grid Fix */
+/* Mobile Responsive 3-Column Grid Fix */
 @media (max-width: 768px) {
     /* Header Navbar Mobile Fix */
     .navbar {
