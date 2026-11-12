@@ -186,7 +186,7 @@ body {
     margin: 0;
 }
 
-/* --- Flash Sale / Deal of the Day Banner (Compact & Width Fixed) --- */
+/* --- Flash Sale / Deal of the Day Banner --- */
 .flash-sale-banner {
     max-width: 1200px;
     margin: 0 auto 15px auto;
@@ -235,7 +235,7 @@ body {
     padding: 4px 12px !important;
     border-radius: 8px !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    width: fit-content !important; /* బాక్స్ అనవసరంగా సాగకుండా ఆపుతుంది */
+    width: fit-content !important;
     max-width: 320px !important;
     box-sizing: border-box !important;
 }
@@ -309,117 +309,48 @@ body {
     color: #facc15;
 }
 
-/* --- Special Offers Section Design --- */
-.offers-section {
-    padding: 12px 15px !important;
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #f7fee7 100%) !important;
-    text-align: center;
-    margin: 10px calc(-50vw + 50%) 15px calc(-50vw + 50%) !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
+/* 🏷️ Special Discounts Auto-Scroll Engine (Fixed & Smooth) */
+.marquee-container {
+    overflow: hidden !important;
+    width: 100% !important;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    overflow: hidden;
-    border-top: 1px solid #bbf7d0;
-    border-bottom: 1px solid #bbf7d0;
+    background: #f8fafc;
+    border: 2px dashed #86efac;
+    border-radius: 12px;
+    padding: 15px 0;
 }
 
-.offers-title {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: #14532d !important;
-    margin-bottom: 10px !important;
+.marquee-track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 15px !important;
+    width: max-content !important;
+    animation: scrollDiscount 18s linear infinite !important;
 }
 
-.offers-slider-container {
-    overflow: hidden;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+.marquee-container:hover .marquee-track {
+    animation-play-state: paused !important;
 }
 
-.offers-wrapper {
-    display: flex;
-    gap: 15px;
-    width: max-content;
-    animation: scrollOffers 25s linear infinite;
-}
-
-.offers-wrapper:hover {
-    animation-play-state: paused;
-}
-
-@keyframes scrollOffers {
+@keyframes scrollDiscount {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
 
-.offer-card {
-    min-width: 220px !important;
-    max-width: 220px !important;
-    background: #ffffff !important;
-    border-radius: 10px !important;
-    padding: 8px 10px !important;
-    border: 1.5px solid #86efac !important;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.offer-card-item {
+    width: 155px !important;
+    flex-shrink: 0 !important;
+    background: white;
+    border: 1.5px solid #86efac;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    text-align: left !important;
+    transition: transform 0.2s ease;
 }
 
-.offer-img {
-    width: 45px !important;
-    height: 45px !important;
-    min-width: 45px !important;
-    object-fit: cover !important;
-    border-radius: 8px !important;
-    border: 1px solid #bbf7d0 !important;
-}
-
-.offer-details {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: 100%;
-}
-
-.offer-details h4 {
-    margin: 0 !important;
-    font-size: 14px !important;
-    color: #14532d !important;
-    font-weight: 700;
-}
-
-.offer-badge {
-    align-self: flex-start;
-    background: #e63946;
-    color: white;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 1px 5px;
-    border-radius: 4px;
-    margin-bottom: 2px;
-}
-
-.offer-price-line {
-    font-size: 12px !important;
-    color: #4b5563 !important;
-    margin: 0 !important;
-}
-
-.offer-price-line strong {
-    color: #166534 !important;
-    font-size: 14px !important;
-    font-weight: 800;
-}
-
-.offer-price-line .original-price {
-    text-decoration: line-through;
-    color: #ef4444 !important;
-    margin-left: 5px;
-    font-size: 11px !important;
+.offer-card-item:hover {
+    transform: translateY(-3px);
 }
 
 /* --- Products & Categories Section --- */
@@ -586,15 +517,7 @@ body {
     width: 100%;
 }
 
-@media (max-width: 768px) {
-    .hero, .hero-section { height: 260px !important; padding: 15px !important; text-align: center !important; justify-content: center !important; }
-    .trust-container { grid-template-columns: repeat(2, 1fr); }
-    .flash-sale-content { flex-direction: column; text-align: center; }
-}
-
-
-
-/* రంగులు మారుతూ ఫ్లాష్ అయ్యే అనౌన్స్‌మెంట్ బార్ ఎఫెక్ట్ మరియు పెద్ద ఫాంట్ */
+/* Announcement Bar Flash */
 @keyframes colorFlash {
     0% { background-color: #b45309; color: #ffffff; }
     33% { background-color: #15803d; color: #facc15; }
@@ -604,46 +527,15 @@ body {
 
 #top-announcement-bar {
     animation: colorFlash 3s infinite ease-in-out;
-    font-size: 18px !important; /* ఇక్కడ అక్షరాల సైజ్ పెద్దగా ఉంటుంది */
-    font-weight: 800 !important; /* అక్షరాలు చాలా బొద్దుగా క్లియర్ గా కనిపిస్తాయి */
-    padding: 14px 20px !important; /* బార్ కొంచెం వెడల్పుగా అందంగా ఉంటుంది */
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    padding: 14px 20px !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     letter-spacing: 0.5px;
 }
 
-/* 🏷️ Special Discounts Auto-Scroll Engine */
-.marquee-container {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-    background: #f8fafc;
-    border: 2px dashed #86efac;
-    border-radius: 12px;
-    padding: 15px;
-}
-
-.marquee-track {
-    display: flex;
-    gap: 15px;
-    width: max-content;
-    animation: scrollDiscount 20s linear infinite;
-}
-
-.marquee-container:hover .marquee-track {
-    animation-play-state: paused; /* మాઉસ పెడితే స్క్రోల్ ఆగుతుంది */
-}
-
-@keyframes scrollDiscount {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.offer-card-item {
-    width: 150px;
-    flex-shrink: 0;
-    background: white;
-    border: 1px solid #86efac;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
+@media (max-width: 768px) {
+    .hero, .hero-section { height: 260px !important; padding: 15px !important; text-align: center !important; justify-content: center !important; }
+    .trust-container { grid-template-columns: repeat(2, 1fr); }
+    .flash-sale-content { flex-direction: column; text-align: center; }
 }
