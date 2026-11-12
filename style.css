@@ -186,171 +186,17 @@ body {
     margin: 0;
 }
 
-/* --- Flash Sale / Deal of the Day Banner --- */
-.flash-sale-banner {
-    max-width: 1200px;
-    margin: 0 auto 15px auto;
-    background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
-    color: white;
-    border-radius: 12px;
-    padding: 10px 20px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.flash-sale-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.flash-sale-left {
-    flex: 1;
-    min-width: 250px;
-    max-width: 350px !important;
-}
-
-.flash-badge {
-    background: #e63946;
-    color: #fff;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 7px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-bottom: 4px;
-}
-
-.deal-product-box {
-    margin-top: 2px !important;
-    max-height: 55px !important;
-}
-
-.deal-card-inline {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    background: rgba(255, 255, 255, 0.12) !important;
-    padding: 4px 12px !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    width: fit-content !important;
-    max-width: 320px !important;
-    box-sizing: border-box !important;
-}
-
-.deal-img {
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    max-height: 40px !important;
-    object-fit: cover !important;
-    border-radius: 6px !important;
-    border: 1px solid #86efac !important;
-}
-
-.deal-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.deal-details h3 {
-    margin: 0 !important;
-    font-size: 14px !important;
-    color: #ffffff !important;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    line-height: 1.2;
-}
-
-.deal-tag {
-    background: #facc15;
-    color: #14532d;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 1px 5px;
-    border-radius: 3px;
-}
-
-.deal-price-line {
-    margin: 2px 0 0 0 !important;
-    font-size: 12px !important;
-    color: #e2e8f0 !important;
-    line-height: 1.2;
-}
-
-.deal-price-line strong {
-    color: #86efac;
-    font-size: 13px;
-}
-
-.original-price {
-    text-decoration: line-through;
-    color: #fca5a5;
-    margin-left: 6px;
-    font-size: 11px;
-}
-
-.timer-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 8px 16px;
-    border-radius: 8px;
-}
-
-#flash-timer {
-    font-size: 16px;
-    font-weight: bold;
-    color: #facc15;
-}
-
-/* 🏷️ Special Discounts Auto-Scroll Engine (Fixed & Smooth) */
-.marquee-container {
-    overflow: hidden !important;
-    width: 100% !important;
-    position: relative;
-    background: #f8fafc;
-    border: 2px dashed #86efac;
-    border-radius: 12px;
-    padding: 15px 0;
-}
-
-.marquee-track {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: 15px !important;
-    width: max-content !important;
-    animation: scrollDiscount 18s linear infinite !important;
-}
-
-.marquee-container:hover .marquee-track {
-    animation-play-state: paused !important;
-}
-
-@keyframes scrollDiscount {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
+/* --- Special Offer Card inside Marquee --- */
 .offer-card-item {
-    width: 155px !important;
-    flex-shrink: 0 !important;
+    width: 150px;
+    flex-shrink: 0;
     background: white;
     border: 1.5px solid #86efac;
     border-radius: 10px;
     padding: 10px;
     text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
-}
-
-.offer-card-item:hover {
-    transform: translateY(-3px);
+    cursor: pointer;
 }
 
 /* --- Products & Categories Section --- */
@@ -408,25 +254,6 @@ body {
     gap: 15px !important;
     width: 100% !important;
     margin-top: 15px !important;
-}
-
-.menu-item-row {
-    display: flex !important;
-    flex-direction: column !important;
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 12px !important;
-    border: 1px solid #86efac !important;
-    align-items: center !important;
-    text-align: center !important;
-}
-
-.product-card-img {
-    width: 75px !important;
-    height: 75px !important;
-    object-fit: cover !important;
-    border-radius: 8px !important;
-    margin-bottom: 8px !important;
 }
 
 /* --- Cart Sidebar --- */
@@ -537,5 +364,4 @@ body {
 @media (max-width: 768px) {
     .hero, .hero-section { height: 260px !important; padding: 15px !important; text-align: center !important; justify-content: center !important; }
     .trust-container { grid-template-columns: repeat(2, 1fr); }
-    .flash-sale-content { flex-direction: column; text-align: center; }
 }
