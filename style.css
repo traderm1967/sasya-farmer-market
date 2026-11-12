@@ -361,7 +361,82 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* Mobile Responsive 2-Column Grid Fix */
 @media (max-width: 768px) {
-    .hero, .hero-section { height: 260px !important; padding: 15px !important; text-align: center !important; justify-content: center !important; }
-    .trust-container { grid-template-columns: repeat(2, 1fr); }
+    /* Header Navbar Mobile Fix */
+    .navbar {
+        flex-wrap: wrap;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 12px;
+        padding-bottom: 5px;
+        white-space: nowrap;
+    }
+    .nav-links a {
+        font-size: 14px !important;
+    }
+    .search-box {
+        width: 140px;
+    }
+
+    /* Hero Section Mobile Fix */
+    .hero, .hero-section { 
+        height: 260px !important; 
+        padding: 15px !important; 
+        text-align: center !important; 
+        justify-content: center !important; 
+    }
+    .hero-text h1 {
+        font-size: 20px !important;
+    }
+
+    /* Trust Badges 2x2 Grid */
+    .trust-container { 
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 10px !important;
+    }
+    .trust-card {
+        padding: 8px 10px !important;
+        gap: 8px !important;
+    }
+    .trust-card i {
+        font-size: 18px !important;
+    }
+    .trust-card h4 {
+        font-size: 12px !important;
+    }
+
+    /* Categories & Products 2-Column Grid View */
+    .category-grid,
+    .product-grid,
+    .product-menu-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .product-card {
+        padding: 8px !important;
+    }
+    .product-card img {
+        width: 75px !important;
+        height: 75px !important;
+    }
+    .product-card h4 {
+        font-size: 13px !important;
+    }
+    
+    /* Cart Sidebar Mobile Width */
+    .cart-sidebar {
+        width: 100% !important;
+        right: -100% !important;
+    }
+    .cart-sidebar.open {
+        right: 0 !important;
+    }
 }
