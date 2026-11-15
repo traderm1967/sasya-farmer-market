@@ -64,7 +64,7 @@
     <div class="preorder-content">
         <div>
             <h2>🌱 Fresh Harvest Pre-Order Booking</h2>
-            <p>రేపటి తాజా పంట కోసం ఇప్పుడే ముందుగా ఆర్డర్ బుక్ చేసుకోండి!</p>
+            <p>Book in advance for farm-fresh morning or evening delivery!</p>
         </div>
         <button type="button" class="preorder-btn" onclick="openPreOrderModal()">📅 Book Pre-Order Now</button>
     </div>
@@ -77,51 +77,44 @@
         <h3 style="margin-top:0; color:#1b5e20;">📅 Pre-Order Booking</h3>
         
         <form id="preOrderForm" onsubmit="submitPreOrder(event)">
-            <input type="text" id="poName" placeholder="మీ పేరు (Your Name)" required>
-            <input type="tel" id="poPhone" placeholder="ఫోన్ నంబర్ (Phone Number)" required>
+            <input type="text" id="poName" placeholder="Your Full Name" required>
+            <input type="tel" id="poPhone" placeholder="Phone Number" required>
             
             <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                 <input type="date" id="poDate" style="margin-bottom: 0;" required>
                 <select id="poSlot" style="margin-bottom: 0;" required>
-                    <option value="">సమయం (Slot)</option>
-                    <option value="Morning (7 AM - 10 AM)">Morning (7-10 AM)</option>
-                    <option value="Evening (5 PM - 8 PM)">Evening (5-8 PM)</option>
+                    <option value="">Select Delivery Slot</option>
+                    <option value="Morning (7 AM - 10 AM)">Morning (7 AM - 10 AM)</option>
+                    <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
                 </select>
             </div>
 
             <!-- Multiple Products Selection Box -->
             <label style="font-size: 13px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">
-                ఐటమ్స్ ఎంచుకోండి (Select Products & Quantity):
+                Select Products & Quantity:
             </label>
             <div style="display: flex; gap: 6px; margin-bottom: 8px;">
                 <select id="poProductSelect" style="flex: 2; margin-bottom: 0;">
-                    <option value="">-- ప్రొడక్ట్ ఎంచుకోండి --</option>
-                    <option value="Tomato (టమాట)">Tomato (టమాట)</option>
-                    <option value="Onion (ఉల్లిపాయ)">Onion (ఉల్లిపాయ)</option>
-                    <option value="Potato (బంగాళాదుంప)">Potato (బంగాళాదుంప)</option>
-                    <option value="Brinjal (వంకాయ)">Brinjal (వంకాయ)</option>
-                    <option value="Lady Finger (బెండకాయ)">Lady Finger (బెండకాయ)</option>
-                    <option value="Mango (మామిడి)">Mango (మామిడి)</option>
-                    <option value="Banana (అరటిపండు)">Banana (అరటిపండు)</option>
-                    <option value="Apple (ఆపిల్)">Apple (ఆపిల్)</option>
-                    <option value="Spinach / Leafy Veg (ఆకుకూరలు)">Leafy Veg (ఆకుకూరలు)</option>
+                    <option value="">-- Select Product --</option>
                 </select>
 
                 <select id="poQtySelect" style="flex: 1; margin-bottom: 0;">
+                    <option value="250g">250g</option>
                     <option value="500g">500g</option>
                     <option value="1 Kg" selected>1 Kg</option>
                     <option value="2 Kg">2 Kg</option>
                     <option value="3 Kg">3 Kg</option>
                     <option value="5 Kg">5 Kg</option>
                     <option value="1 Dozen">1 Dozen</option>
+                    <option value="1 Pack">1 Pack</option>
                 </select>
 
                 <button type="button" onclick="addPreOrderItem()" style="background: #ff9800; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">+ Add</button>
             </div>
 
-            <!-- ఎంచుకున్న ఐటమ్స్ ఇక్కడ కనిపిస్తాయి -->
-            <ul id="selectedPoItemsList" style="list-style: none; padding: 8px; margin: 0 0 12px 0; background: #f1f8e9; border: 1px dashed #81c784; border-radius: 6px; max-height: 120px; overflow-y: auto; font-size: 13px;">
-                <li style="color: #777; text-align: center;">ఇంకా ఏ ఐటమ్స్ యాడ్ చేయలేదు</li>
+            <!-- Selected Items List -->
+            <ul id="selectedPoItemsList" style="list-style: none; padding: 8px; margin: 0 0 12px 0; background: #f1f8e9; border: 1px dashed #81c784; border-radius: 6px; max-height: 130px; overflow-y: auto; font-size: 13px;">
+                <li style="color: #777; text-align: center;">No items added yet</li>
             </ul>
 
             <button type="submit" class="submit-po-btn">Confirm Pre-Order ✅</button>
