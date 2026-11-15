@@ -836,21 +836,3 @@ function loadAdminPreOrders() {
     `).join('');
 }
 
-// ఒక్క ఆర్డర్ డిలీట్ చేయడానికి
-function deletePreOrder(index) {
-    let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
-    preOrders.splice(index, 1);
-    localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
-    loadAdminPreOrders();
-}
-
-// అన్ని ఆర్డర్స్ క్లియర్ చేయడానికి
-function clearAllPreOrders() {
-    if (confirm("అన్ని Pre-Orders డిలీట్ చేయాలా?")) {
-        localStorage.removeItem('sasyaPreOrders');
-        loadAdminPreOrders();
-    }
-}
-
-// పేజీ లోడ్ అవ్వగానే టేబుల్ నింపడం
-document.addEventListener('DOMContentLoaded', loadAdminPreOrders);
