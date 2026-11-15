@@ -171,6 +171,32 @@
             </form>
         </div>
 
+<!-- Admin Portal Pre-Orders Section -->
+<div class="admin-section" style="margin-top: 30px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: #1b5e20; margin: 0;">📅 Customer Pre-Order Bookings</h3>
+        <button onclick="clearAllPreOrders()" style="background: #d32f2f; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;">Clear All</button>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+                <tr style="background: #e8f5e9; color: #1b5e20;">
+                    <th style="padding: 10px; border: 1px solid #ddd;">Order ID</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Customer Name</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Phone</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Delivery Date & Slot</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Items</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="adminPreOrdersList">
+                <!-- JavaScript ద్వారా ఇక్కడ డేటా లోడ్ అవుతుంది -->
+            </tbody>
+        </table>
+    </div>
+</div>
+        
         <!-- TAB 2: Social Media Links -->
         <div id="social-links-tab" class="tab-content">
             <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; border: 1px solid #86efac;">
