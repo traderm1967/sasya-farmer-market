@@ -1,6 +1,6 @@
 const OWNER_WHATSAPP_NUMBER = "918977881224";
 
-// 1. Master Products Catalog
+// 1. Master Products Catalog (37 Default Products)
 const defaultProducts = [
     // 🥦 VEGETABLES
     { id: 101, name: "Tomato", category: "vegetables", price: 40, costPrice: 30, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
@@ -192,7 +192,6 @@ function renderFlashSaleAndOffers() {
     let activeDeals = productsWithOffers.filter(p => p.hasDiscount && p.isDealOfDay);
     let activeOffers = productsWithOffers.filter(p => p.hasDiscount && !p.isDealOfDay);
 
-    // Flash Deals of the Day Slide
     if (dealContainer) {
         if (activeDeals.length > 0) {
             let dealSlidesHTML = activeDeals.map(p => {
@@ -228,7 +227,6 @@ function renderFlashSaleAndOffers() {
         }
     }
     
-    // Active Special Offers inside Marquee
     if (offersWrapper) {
         if (activeOffers.length > 0) {
             let offersHTML = activeOffers.map(p => {
@@ -293,7 +291,11 @@ function startFlashTimer() {
 }
 
 function renderAnnouncementBar() {
-    let saved = JSON.parse(localStorage.getItem('sasya_announcement'));
+    let saved = null;
+    try {
+        saved = JSON.parse(localStorage.getItem('sasya_announcement'));
+    } catch(e) { saved = null; }
+
     let bar = document.getElementById('top-announcement-bar');
     let textSpan = document.getElementById('announcement-text-content');
 
@@ -579,7 +581,7 @@ function downloadPDFBill() {
             </table>
             <h3 style="text-align:right; color:#14532d;">Grand Total: ₹${total}</h3><hr>
             <p style="text-align:center; font-size:12px; color:#666;">Thank you for shopping with Sasya Farmer Market!</p>
-            <script>window.print();</script>
+            <script>window.print();<\/script>
         </body></html>
     `);
     billWindow.document.close();
@@ -737,6 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startFlashTimer();
     renderAnnouncementBar();
     refreshCurrentPageGrid();
+    loadAdminPreOrders();
 });
 
 window.addEventListener('storage', (e) => {
@@ -747,65 +750,7 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-// Pre-Order Modal Functions
-function openPreOrderModal() {
-    const modal = document.getElementById('preOrderModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        // రేపటి తేదీని డిఫాల్ట్‌గా సెట్ చేయడం
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('poDate').value = tomorrow.toISOString().split('T')[0];
-    }
-}
-
-function closePreOrderModal() {
-    const modal = document.getElementById('preOrderModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// మీ WhatsApp నంబర్ ఇక్కడ ఇవ్వండి (Country code 91 తో కలిపి, ఉదా: 919876543210)
-const OWNER_WHATSAPP_NUMBER = "919876543210"; 
-
-function submitPreOrder(event) {
-    event.preventDefault();
-    
-    const booking = {
-        id: 'PO-' + Math.floor(1000 + Math.random() * 9000),
-        name: document.getElementById('poName').value.trim(),
-        phone: document.getElementById('poPhone').value.trim(),
-        date: document.getElementById('poDate').value,
-        slot: document.getElementById('poSlot').value,
-        items: document.getElementById('poItems').value.trim(),
-        bookedAt: new Date().toLocaleString()
-    };
-
-    // 1. Admin Portal కోసం LocalStorage లో సేవ్ చేయడం
-    let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
-    preOrders.unshift(booking); // కొత్త ఆర్డర్ పైన కనిపించడానికి unshift
-    localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
-
-    // 2. WhatsApp మెసేజ్ ఫార్మాట్ తయారు చేయడం
-    const waMessage = 
-        `🌱 *NEW PRE-ORDER - SASYA FARMER MARKET* 🌱\n\n` +
-        `*Order ID:* ${booking.id}\n` +
-        `*Name:* ${booking.name}\n` +
-        `*Phone:* ${booking.phone}\n` +
-        `*Delivery Date:* ${booking.date}\n` +
-        `*Time Slot:* ${booking.slot}\n` +
-        `*Items Requested:*\n${booking.items}`;
-
-    const waUrl = `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
-
-    alert(`ధన్యవాదాలు ${booking.name}! మీ Pre-Order నమోదైంది. ఇప్పుడు WhatsApp ద్వారా నిర్ధారించండి.`);
-    document.getElementById('preOrderForm').reset();
-    closePreOrderModal();
-
-    // WhatsApp ఓపెన్ చేయడం
-    window.open(waUrl, '_blank');
-}
-
-// Admin Portal లో Pre-Orders చూపించడం
+// 9. Admin Portal Pre-Orders Table Loader
 function loadAdminPreOrders() {
     const tableBody = document.getElementById('adminPreOrdersList');
     if (!tableBody) return;
@@ -836,3 +781,11 @@ function loadAdminPreOrders() {
     `).join('');
 }
 
+function deletePreOrder(index) {
+    if (confirm("ఈ Pre-Order ను పూర్తి చేసినట్లు గుర్తించి తొలగించాలా?")) {
+        let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
+        preOrders.splice(index, 1);
+        localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
+        loadAdminPreOrders();
+    }
+}
