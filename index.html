@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sasya Farmer Market</title>
     <base href="./">
-    <link rel="stylesheet" href="style.css?v=2026.9">
+    <link rel="stylesheet" href="style.css?v=2026.10">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
 </head>
@@ -59,68 +59,68 @@
         </marquee>
     </div>
 
-<!-- Pre-Order Banner Section -->
-<section class="preorder-banner">
-    <div class="preorder-content">
-        <div>
-            <h2>🌱 Fresh Harvest Pre-Order Booking</h2>
-            <p>Book in advance for farm-fresh morning or evening delivery!</p>
+    <!-- Pre-Order Banner Section -->
+    <section class="preorder-banner">
+        <div class="preorder-content">
+            <div>
+                <h2>🌱 Fresh Harvest Pre-Order Booking</h2>
+                <p>Book in advance for farm-fresh morning or evening delivery!</p>
+            </div>
+            <button type="button" class="preorder-btn" onclick="openPreOrderModal()">📅 Book Pre-Order Now</button>
         </div>
-        <button type="button" class="preorder-btn" onclick="openPreOrderModal()">📅 Book Pre-Order Now</button>
-    </div>
-</section>
+    </section>
 
-<!-- Pre-Order Popup Modal -->
-<div id="preOrderModal" class="modal-overlay" style="display: none;">
-    <div class="modal-box">
-        <span class="close-modal" onclick="closePreOrderModal()">&times;</span>
-        <h3 style="margin-top:0; color:#1b5e20;">📅 Pre-Order Booking</h3>
-        
-        <form id="preOrderForm" onsubmit="submitPreOrder(event)">
-            <input type="text" id="poName" placeholder="Your Full Name" required>
-            <input type="tel" id="poPhone" placeholder="Phone Number" required>
+    <!-- Pre-Order Popup Modal (100% English) -->
+    <div id="preOrderModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closePreOrderModal()">&times;</span>
+            <h3 style="margin-top:0; color:#1b5e20;">📅 Pre-Order Booking</h3>
             
-            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                <input type="date" id="poDate" style="margin-bottom: 0;" required>
-                <select id="poSlot" style="margin-bottom: 0;" required>
-                    <option value="">Select Delivery Slot</option>
-                    <option value="Morning (7 AM - 10 AM)">Morning (7 AM - 10 AM)</option>
-                    <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
-                </select>
-            </div>
+            <form id="preOrderForm" onsubmit="submitPreOrder(event)">
+                <input type="text" id="poName" placeholder="Your Full Name" required>
+                <input type="tel" id="poPhone" placeholder="Phone Number" required>
+                
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <input type="date" id="poDate" style="margin-bottom: 0;" required>
+                    <select id="poSlot" style="margin-bottom: 0;" required>
+                        <option value="">Select Delivery Slot</option>
+                        <option value="Morning (7 AM - 10 AM)">Morning (7 AM - 10 AM)</option>
+                        <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
+                    </select>
+                </div>
 
-            <!-- Multiple Products Selection Box -->
-            <label style="font-size: 13px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">
-                Select Products & Quantity:
-            </label>
-            <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-                <select id="poProductSelect" style="flex: 2; margin-bottom: 0;">
-                    <option value="">-- Select Product --</option>
-                </select>
+                <!-- Multiple Products Selection Box -->
+                <label style="font-size: 13px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">
+                    Select Products & Quantity:
+                </label>
+                <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+                    <select id="poProductSelect" style="flex: 2; margin-bottom: 0;">
+                        <option value="">-- Select Product --</option>
+                    </select>
 
-                <select id="poQtySelect" style="flex: 1; margin-bottom: 0;">
-                    <option value="250g">250g</option>
-                    <option value="500g">500g</option>
-                    <option value="1 Kg" selected>1 Kg</option>
-                    <option value="2 Kg">2 Kg</option>
-                    <option value="3 Kg">3 Kg</option>
-                    <option value="5 Kg">5 Kg</option>
-                    <option value="1 Dozen">1 Dozen</option>
-                    <option value="1 Pack">1 Pack</option>
-                </select>
+                    <select id="poQtySelect" style="flex: 1; margin-bottom: 0;">
+                        <option value="250g">250g</option>
+                        <option value="500g">500g</option>
+                        <option value="1 Kg" selected>1 Kg</option>
+                        <option value="2 Kg">2 Kg</option>
+                        <option value="3 Kg">3 Kg</option>
+                        <option value="5 Kg">5 Kg</option>
+                        <option value="1 Dozen">1 Dozen</option>
+                        <option value="1 Pack">1 Pack</option>
+                    </select>
 
-                <button type="button" onclick="addPreOrderItem()" style="background: #ff9800; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">+ Add</button>
-            </div>
+                    <button type="button" onclick="addPreOrderItem()" style="background: #ff9800; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">+ Add</button>
+                </div>
 
-            <!-- Selected Items List -->
-            <ul id="selectedPoItemsList" style="list-style: none; padding: 8px; margin: 0 0 12px 0; background: #f1f8e9; border: 1px dashed #81c784; border-radius: 6px; max-height: 130px; overflow-y: auto; font-size: 13px;">
-                <li style="color: #777; text-align: center;">No items added yet</li>
-            </ul>
+                <!-- Selected Items List -->
+                <ul id="selectedPoItemsList" style="list-style: none; padding: 8px; margin: 0 0 12px 0; background: #f1f8e9; border: 1px dashed #81c784; border-radius: 6px; max-height: 130px; overflow-y: auto; font-size: 13px;">
+                    <li style="color: #777; text-align: center;">No items added yet</li>
+                </ul>
 
-            <button type="submit" class="submit-po-btn">Confirm Pre-Order ✅</button>
-        </form>
+                <button type="submit" class="submit-po-btn">Confirm Pre-Order ✅</button>
+            </form>
+        </div>
     </div>
-</div>
     
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -200,132 +200,6 @@
                 <div id="offers-wrapper" style="display: inline-flex; gap: 15px; padding: 5px 0;"></div>
             </marquee>
         </div>
-<script>
-const OWNER_WHATSAPP_NUMBER = "919876543210"; // మీ WhatsApp నంబర్ ఇవ్వండి
-let currentPreOrderItems = [];
-
-// పాప్-అప్ ఓపెన్ చేయడం
-function openPreOrderModal() {
-    const modal = document.getElementById('preOrderModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('poDate').value = tomorrow.toISOString().split('T')[0];
-        
-        // మీ వెబ్‌సైట్ products లిస్ట్ నుండి ఆటోమేటిక్‌గా డ్రాప్-డౌన్ నింపడం (ఉంటే)
-        populateProductDropdown();
-    }
-}
-
-// పాప్-అప్ క్లోజ్ చేయడం
-function closePreOrderModal() {
-    const modal = document.getElementById('preOrderModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// మీ సైట్ లోని అన్ని ప్రొడక్ట్స్ డ్రాప్-డౌన్ లో ఆటోమేటిక్‌గా రావడానికి
-function populateProductDropdown() {
-    const select = document.getElementById('poProductSelect');
-    if (typeof products !== 'undefined' && Array.isArray(products) && products.length > 0) {
-        select.innerHTML = '<option value="">-- ప్రొడక్ట్ ఎంచుకోండి --</option>';
-        products.forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.name;
-            opt.textContent = `${p.name} (₹${p.price})`;
-            select.appendChild(opt);
-        });
-    }
-}
-
-// లిస్ట్ లోకి ఒక ప్రొడక్ట్ + క్వాంటిటీ యాడ్ చేయడం
-function addPreOrderItem() {
-    const prod = document.getElementById('poProductSelect').value;
-    const qty = document.getElementById('poQtySelect').value;
-
-    if (!prod) {
-        alert("దయచేసి ముందుగా ఒక ప్రొడక్ట్ ఎంచుకోండి!");
-        return;
-    }
-
-    // ఇప్పటికే ఉంటే క్వాంటిటీ అప్‌డేట్ చేయడం లేదా కొత్తది యాడ్ చేయడం
-    currentPreOrderItems.push({ product: prod, quantity: qty });
-    renderSelectedPoItems();
-    document.getElementById('poProductSelect').value = "";
-}
-
-// ఎంచుకున్న ఐటమ్స్ స్క్రీన్ మీద చూపించడం
-function renderSelectedPoItems() {
-    const listEl = document.getElementById('selectedPoItemsList');
-    if (currentPreOrderItems.length === 0) {
-        listEl.innerHTML = '<li style="color: #777; text-align: center;">ఇంకా ఏ ఐటమ్స్ యాడ్ చేయలేదు</li>';
-        return;
-    }
-
-    listEl.innerHTML = currentPreOrderItems.map((item, idx) => `
-        <li style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #dcedc8;">
-            <span><strong>${item.product}</strong> — ${item.quantity}</span>
-            <button type="button" onclick="removePoItem(${idx})" style="background: #e53935; color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 11px; cursor: pointer;">✕</button>
-        </li>
-    `).join('');
-}
-
-// యాడ్ చేసిన ఐటమ్ తొలగించడం
-function removePoItem(index) {
-    currentPreOrderItems.splice(index, 1);
-    renderSelectedPoItems();
-}
-
-// ఫారమ్ సబ్మిట్ చేయడం (Admin Portal + WhatsApp)
-function submitPreOrder(event) {
-    event.preventDefault();
-
-    if (currentPreOrderItems.length === 0) {
-        alert("దయచేసి కనీసం ఒక ఐటమ్ ఎంచుకుని '+ Add' బటన్ నొక్కండి!");
-        return;
-    }
-
-    const formattedItems = currentPreOrderItems.map(i => `• ${i.product} (${i.quantity})`).join('\n');
-
-    const booking = {
-        id: 'PO-' + Math.floor(1000 + Math.random() * 9000),
-        name: document.getElementById('poName').value.trim(),
-        phone: document.getElementById('poPhone').value.trim(),
-        date: document.getElementById('poDate').value,
-        slot: document.getElementById('poSlot').value,
-        items: formattedItems,
-        bookedAt: new Date().toLocaleString()
-    };
-
-    // Admin Portal కోసం LocalStorage లో సేవ్ చేయడం
-    let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
-    preOrders.unshift(booking);
-    localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
-
-    // WhatsApp మెసేజ్ పంపడం
-    const waMessage = 
-        `🌱 *NEW PRE-ORDER - SASYA FARMER MARKET* 🌱\n\n` +
-        `*Order ID:* ${booking.id}\n` +
-        `*Name:* ${booking.name}\n` +
-        `*Phone:* ${booking.phone}\n` +
-        `*Delivery Date:* ${booking.date}\n` +
-        `*Time Slot:* ${booking.slot}\n` +
-        `*Selected Items:*\n${booking.items}`;
-
-    const waUrl = `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
-
-    alert(`ధన్యవాదాలు ${booking.name}! మీ Pre-Order నమోదైంది.`);
-    
-    // రీసెట్ చేయడం
-    currentPreOrderItems = [];
-    renderSelectedPoItems();
-    document.getElementById('preOrderForm').reset();
-    closePreOrderModal();
-
-    window.open(waUrl, '_blank');
-}
-</script>
-        
     </section>
 
     <!-- Main Products Category Navigation Section -->
@@ -407,7 +281,7 @@ function submitPreOrder(event) {
                     <li><a href="grains.html">Grains</a></li>
                     <li><a href="pulses.html">Pulses</a></li>    
                     <li style="margin-top: 12px;">
-                        <a href="admin.html" onclick="let p = prompt('Admin పాస్‌వర్డ్ ఎంటర్ చేయండి:'); if(p !== '1234'){ alert('❌ తప్పు పాస్‌వర్డ్!'); return false; }" style="color: #ef4444; font-weight: bold; font-size: 14px;">⚙️ Admin Portal</a>
+                        <a href="admin.html" onclick="let p = prompt('Enter Admin Password:'); if(p !== '1234'){ alert('❌ Wrong Password!'); return false; }" style="color: #ef4444; font-weight: bold; font-size: 14px;">⚙️ Admin Portal</a>
                     </li>
                 </ul>
             </div>
@@ -426,6 +300,158 @@ function submitPreOrder(event) {
     </footer>
 
     <!-- Script Integration -->
-    <script src="script.js?v=2026.9"></script>
+    <script src="script.js?v=2026.10"></script>
+
+    <!-- Pre-Order Logic (100% English + Auto Loads All Site Products) -->
+    <script>
+        const OWNER_WHATSAPP_NUMBER = "918977881224";
+        let currentPreOrderItems = [];
+
+        function openPreOrderModal() {
+            const modal = document.getElementById('preOrderModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('poDate').value = tomorrow.toISOString().split('T')[0];
+                populateAllSiteProducts();
+            }
+        }
+
+        function closePreOrderModal() {
+            const modal = document.getElementById('preOrderModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function populateAllSiteProducts() {
+            const select = document.getElementById('poProductSelect');
+            select.innerHTML = '<option value="">-- Select Product --</option>';
+
+            let foundProducts = [];
+
+            // 1. Check global arrays from script.js
+            const possibleArrays = ['products', 'allProducts', 'defaultProducts', 'storeProducts', 'items'];
+            for (const varName of possibleArrays) {
+                if (Array.isArray(window[varName]) && window[varName].length > 0) {
+                    foundProducts = window[varName];
+                    break;
+                }
+            }
+
+            // 2. Check LocalStorage for saved products
+            if (foundProducts.length === 0) {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key === 'sasyaPreOrders' || key === 'cart') continue;
+                    try {
+                        const parsed = JSON.parse(localStorage.getItem(key));
+                        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].name) {
+                            foundProducts = parsed;
+                            break;
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            // 3. Fallback: Read rendered product cards from the page
+            if (foundProducts.length === 0) {
+                document.querySelectorAll('.product-card h4, .product-card h3').forEach(el => {
+                    const pName = el.innerText.trim();
+                    if (pName && !foundProducts.some(item => item.name === pName)) {
+                        foundProducts.push({ name: pName });
+                    }
+                });
+            }
+
+            // Populate dropdown
+            foundProducts.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.name;
+                opt.textContent = p.price ? `${p.name} (₹${p.price})` : p.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function addPreOrderItem() {
+            const prod = document.getElementById('poProductSelect').value;
+            const qty = document.getElementById('poQtySelect').value;
+
+            if (!prod) {
+                alert("Please select a product first!");
+                return;
+            }
+
+            currentPreOrderItems.push({ product: prod, quantity: qty });
+            renderSelectedPoItems();
+            document.getElementById('poProductSelect').value = "";
+        }
+
+        function renderSelectedPoItems() {
+            const listEl = document.getElementById('selectedPoItemsList');
+            if (currentPreOrderItems.length === 0) {
+                listEl.innerHTML = '<li style="color: #777; text-align: center;">No items added yet</li>';
+                return;
+            }
+
+            listEl.innerHTML = currentPreOrderItems.map((item, idx) => `
+                <li style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #dcedc8;">
+                    <span><strong>${item.product}</strong> — ${item.quantity}</span>
+                    <button type="button" onclick="removePoItem(${idx})" style="background: #e53935; color: white; border: none; border-radius: 4px; padding: 2px 7px; font-size: 11px; cursor: pointer;">✕</button>
+                </li>
+            `).join('');
+        }
+
+        function removePoItem(index) {
+            currentPreOrderItems.splice(index, 1);
+            renderSelectedPoItems();
+        }
+
+        function submitPreOrder(event) {
+            event.preventDefault();
+
+            if (currentPreOrderItems.length === 0) {
+                alert("Please select at least one product and click '+ Add'!");
+                return;
+            }
+
+            const formattedItems = currentPreOrderItems.map(i => `• ${i.product} (${i.quantity})`).join('\n');
+
+            const booking = {
+                id: 'PO-' + Math.floor(1000 + Math.random() * 9000),
+                name: document.getElementById('poName').value.trim(),
+                phone: document.getElementById('poPhone').value.trim(),
+                date: document.getElementById('poDate').value,
+                slot: document.getElementById('poSlot').value,
+                items: formattedItems,
+                bookedAt: new Date().toLocaleString()
+            };
+
+            // Save to LocalStorage for Admin Portal
+            let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
+            preOrders.unshift(booking);
+            localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
+
+            // Send to WhatsApp
+            const waMessage = 
+                `🌱 *NEW PRE-ORDER - SASYA FARMER MARKET* 🌱\n\n` +
+                `*Order ID:* ${booking.id}\n` +
+                `*Name:* ${booking.name}\n` +
+                `*Phone:* ${booking.phone}\n` +
+                `*Delivery Date:* ${booking.date}\n` +
+                `*Time Slot:* ${booking.slot}\n` +
+                `*Selected Items:*\n${booking.items}`;
+
+            const waUrl = `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+
+            alert(`Thank you ${booking.name}! Your Pre-Order has been recorded.`);
+            
+            currentPreOrderItems = [];
+            renderSelectedPoItems();
+            document.getElementById('preOrderForm').reset();
+            closePreOrderModal();
+
+            window.open(waUrl, '_blank');
+        }
+    </script>
 </body>
 </html>
