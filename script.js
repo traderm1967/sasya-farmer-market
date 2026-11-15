@@ -764,25 +764,43 @@ function closePreOrderModal() {
     if (modal) modal.style.display = 'none';
 }
 
+// మీ WhatsApp నంబర్ ఇక్కడ ఇవ్వండి (Country code 91 తో కలిపి, ఉదా: 919876543210)
+const OWNER_WHATSAPP_NUMBER = "919876543210"; 
+
 function submitPreOrder(event) {
     event.preventDefault();
     
     const booking = {
-        id: 'PO-' + Date.now(),
-        name: document.getElementById('poName').value,
-        phone: document.getElementById('poPhone').value,
+        id: 'PO-' + Math.floor(1000 + Math.random() * 9000),
+        name: document.getElementById('poName').value.trim(),
+        phone: document.getElementById('poPhone').value.trim(),
         date: document.getElementById('poDate').value,
         slot: document.getElementById('poSlot').value,
-        items: document.getElementById('poItems').value,
+        items: document.getElementById('poItems').value.trim(),
         bookedAt: new Date().toLocaleString()
     };
 
-    // LocalStorage లో సేవ్ చేయడం (Admin Portal లో చూసుకోవడానికి)
+    // 1. Admin Portal కోసం LocalStorage లో సేవ్ చేయడం
     let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
-    preOrders.push(booking);
+    preOrders.unshift(booking); // కొత్త ఆర్డర్ పైన కనిపించడానికి unshift
     localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
 
-    alert(`ధన్యవాదాలు ${booking.name}! మీ Pre-Order (${booking.date} - ${booking.slot}) విజయవంతంగా నమోదైంది.`);
+    // 2. WhatsApp మెసేజ్ ఫార్మాట్ తయారు చేయడం
+    const waMessage = 
+        `🌱 *NEW PRE-ORDER - SASYA FARMER MARKET* 🌱\n\n` +
+        `*Order ID:* ${booking.id}\n` +
+        `*Name:* ${booking.name}\n` +
+        `*Phone:* ${booking.phone}\n` +
+        `*Delivery Date:* ${booking.date}\n` +
+        `*Time Slot:* ${booking.slot}\n` +
+        `*Items Requested:*\n${booking.items}`;
+
+    const waUrl = `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+
+    alert(`ధన్యవాదాలు ${booking.name}! మీ Pre-Order నమోదైంది. ఇప్పుడు WhatsApp ద్వారా నిర్ధారించండి.`);
     document.getElementById('preOrderForm').reset();
     closePreOrderModal();
+
+    // WhatsApp ఓపెన్ చేయడం
+    window.open(waUrl, '_blank');
 }
