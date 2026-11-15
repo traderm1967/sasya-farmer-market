@@ -1,6 +1,6 @@
 const OWNER_WHATSAPP_NUMBER = "918977881224";
 
-// 1. Master Products Catalog (37 Default Products)
+// 1. Master Products Catalog (All 37 Default Products)
 const defaultProducts = [
     // 🥦 VEGETABLES
     { id: 101, name: "Tomato", category: "vegetables", price: 40, costPrice: 30, unit: "kg", image: "images/tomato.jpg", organic: true, stock: 15, isPublished: true },
@@ -58,22 +58,25 @@ try {
     cart = JSON.parse(localStorage.getItem('sasya_cart_items')) || [];
     wishlist = JSON.parse(localStorage.getItem('sasya_wishlist')) || [];
     orderHistory = JSON.parse(localStorage.getItem('sasya_order_history')) || [];
-} catch(e) {
+} catch (e) {
     cart = []; wishlist = []; orderHistory = [];
 }
 
+// Force merge all 37 default products with any admin-added products
 function initProducts() {
     try {
         let savedData = localStorage.getItem('sasya_all_products');
-        let parsed = savedData ? JSON.parse(savedData) : null;
+        let parsed = savedData ? JSON.parse(savedData) : [];
 
         if (Array.isArray(parsed) && parsed.length > 0) {
-            products = parsed;
+            const existingIds = new Set(parsed.map(p => Number(p.id)));
+            const missingDefaults = defaultProducts.filter(dp => !existingIds.has(Number(dp.id)));
+            products = [...parsed, ...missingDefaults];
         } else {
             products = [...defaultProducts];
-            localStorage.setItem('sasya_all_products', JSON.stringify(products));
         }
-    } catch(e) {
+        localStorage.setItem('sasya_all_products', JSON.stringify(products));
+    } catch (e) {
         products = [...defaultProducts];
     }
 }
@@ -85,17 +88,16 @@ function getValidImage(imgSrc) {
     return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop';
 }
 
-// 2. LocalStorage నుండి Discounts పొందడం
+// 2. Get Discounts from LocalStorage
 function getProductsWithDiscounts() {
     initProducts();
     let activeDiscounts = {};
     try {
         activeDiscounts = JSON.parse(localStorage.getItem('sasya_active_discounts')) || {};
-    } catch(e) { activeDiscounts = {}; }
+    } catch (e) { activeDiscounts = {}; }
 
     return products.map(product => {
         let discountInfo = activeDiscounts[product.id] || activeDiscounts[String(product.id)];
-        
         if (discountInfo) {
             return {
                 ...product,
@@ -253,7 +255,7 @@ function renderFlashSaleAndOffers() {
     }
 }
 
-// 5. Timer & Announcement
+// 5. Timer & Announcement Bar
 function startFlashTimer() {
     function updateTimerDisplay() {
         let savedEndTime = localStorage.getItem('sasya_flash_endtime');
@@ -294,19 +296,18 @@ function renderAnnouncementBar() {
     let saved = null;
     try {
         saved = JSON.parse(localStorage.getItem('sasya_announcement'));
-    } catch(e) { saved = null; }
+    } catch (e) { saved = null; }
 
     let bar = document.getElementById('top-announcement-bar');
     let textSpan = document.getElementById('announcement-text-content');
 
     if (bar && textSpan) {
-        if (saved && saved.active && saved.text) {
-            textSpan.innerText = saved.text;
-            let targetPage = saved.link || "index.html";
-            bar.setAttribute('href', targetPage);
-            bar.style.display = 'block';
-        } else {
+        if (saved && saved.active === false) {
             bar.style.display = 'none';
+        } else {
+            textSpan.innerText = (saved && saved.text) ? saved.text : "🌿 తాజా ఆర్గానిక్ కూరగాయలు & పండ్లపై ప్రత్యేక తగ్గింపు! ₹500 పైన ఆర్డర్‌కు FREE Delivery!";
+            bar.setAttribute('href', (saved && saved.link) ? saved.link : "index.html");
+            bar.style.display = 'block';
         }
     }
 }
@@ -669,7 +670,7 @@ function openOrderHistoryModal() {
 
     try {
         orderHistory = JSON.parse(localStorage.getItem('sasya_order_history')) || [];
-    } catch(e) { orderHistory = []; }
+    } catch (e) { orderHistory = []; }
 
     let historyHtml = '';
     if (orderHistory.length === 0) {
@@ -719,10 +720,11 @@ function closeOrderHistoryModal() {
 
 function getCurrentPageCategory() {
     let path = window.location.pathname.toLowerCase();
-    if (path.includes('veg')) return 'vegetables';
-    if (path.includes('fruit')) return 'fruits';
-    if (path.includes('grain')) return 'grains';
-    if (path.includes('pulse')) return 'pulses';
+    let title = (document.title || '').toLowerCase();
+    if (path.includes('veg') || title.includes('veg')) return 'vegetables';
+    if (path.includes('fruit') || title.includes('fruit')) return 'fruits';
+    if (path.includes('grain') || title.includes('grain')) return 'grains';
+    if (path.includes('pulse') || title.includes('pulse')) return 'pulses';
     return 'home';
 }
 
