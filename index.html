@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sasya Farmer Market</title>
     <base href="./">
-    <link rel="stylesheet" href="style.css?v=2026.11">
+    <link rel="stylesheet" href="style.css?v=2026.12">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
 </head>
@@ -89,13 +89,58 @@
                     </select>
                 </div>
 
-                <!-- Multiple Products Selection Box -->
+                <!-- Multiple Products Selection Box (All 37 Products Categorized) -->
                 <label style="font-size: 13px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">
                     Select Products & Quantity:
                 </label>
                 <div style="display: flex; gap: 6px; margin-bottom: 8px;">
                     <select id="poProductSelect" style="flex: 2; margin-bottom: 0;">
                         <option value="">-- Select Product --</option>
+                        <optgroup label="🥦 Vegetables">
+                            <option value="Tomato">Tomato (₹40/kg)</option>
+                            <option value="Potato">Potato (₹40/kg)</option>
+                            <option value="Onion">Onion (₹35/kg)</option>
+                            <option value="Brinjal">Brinjal (₹30/kg)</option>
+                            <option value="Broccoli">Broccoli (₹80/kg)</option>
+                            <option value="Cabbage">Cabbage (₹30/kg)</option>
+                            <option value="Carrot">Carrot (₹60/kg)</option>
+                            <option value="Corn">Corn (₹30/kg)</option>
+                            <option value="Cucumber">Cucumber (₹35/kg)</option>
+                            <option value="Green Chilli">Green Chilli (₹50/kg)</option>
+                            <option value="Green Peas">Green Peas (₹90/kg)</option>
+                        </optgroup>
+                        <optgroup label="🍎 Fruits">
+                            <option value="Apple">Apple (₹180/kg)</option>
+                            <option value="Banana">Banana (₹50/dozen)</option>
+                            <option value="Dragon Fruit">Dragon Fruit (₹150/kg)</option>
+                            <option value="Guava">Guava (₹70/kg)</option>
+                            <option value="Mango">Mango (₹120/kg)</option>
+                            <option value="Orange">Orange (₹80/kg)</option>
+                            <option value="Papaya">Papaya (₹50/kg)</option>
+                            <option value="Pear">Pear (₹140/kg)</option>
+                            <option value="Plum">Plum (₹160/kg)</option>
+                            <option value="Strawberry">Strawberry (₹200/box)</option>
+                            <option value="Watermelon">Watermelon (₹40/kg)</option>
+                        </optgroup>
+                        <optgroup label="🌾 Grains & Millets">
+                            <option value="Barley">Barley (₹65/kg)</option>
+                            <option value="Brown Rice">Brown Rice (₹90/kg)</option>
+                            <option value="Golden Rice">Golden Rice (₹80/kg)</option>
+                            <option value="Little Millet">Little Millet (₹110/kg)</option>
+                            <option value="Oats">Oats (₹120/kg)</option>
+                            <option value="Ragi">Ragi (₹55/kg)</option>
+                            <option value="Suji (Semolina)">Suji (Semolina) (₹45/kg)</option>
+                            <option value="Wheat">Wheat (₹40/kg)</option>
+                        </optgroup>
+                        <optgroup label="🫘 Pulses & Dals">
+                            <option value="Chana Dal">Chana Dal (₹95/kg)</option>
+                            <option value="Kulthi Dal (Horse Gram)">Kulthi Dal (Horse Gram) (₹100/kg)</option>
+                            <option value="Lobia (Black-eyed Peas)">Lobia (Black-eyed Peas) (₹110/kg)</option>
+                            <option value="Masoor Dal">Masoor Dal (₹90/kg)</option>
+                            <option value="Mung Bean (Pesalu)">Mung Bean (Pesalu) (₹120/kg)</option>
+                            <option value="Rajma">Rajma (₹140/kg)</option>
+                            <option value="Tuvar Dal (Kandi Pappu)">Tuvar Dal (Kandi Pappu) (₹150/kg)</option>
+                        </optgroup>
                     </select>
 
                     <select id="poQtySelect" style="flex: 1; margin-bottom: 0;">
@@ -300,9 +345,9 @@
     </footer>
 
     <!-- Script Integration -->
-    <script src="script.js?v=2026.11"></script>
+    <script src="script.js?v=2026.12"></script>
 
-    <!-- Pre-Order Logic (100% Fixed: No Duplicate Variable + All 37 Products Loaded) -->
+    <!-- Pre-Order Logic (All 37 Products Guaranteed + Syncs Admin Additions) -->
     <script>
         let currentPreOrderItems = [];
 
@@ -324,23 +369,27 @@
 
         function populateAllSiteProducts() {
             const select = document.getElementById('poProductSelect');
-            select.innerHTML = '<option value="">-- Select Product --</option>';
+            if (!select) return;
 
-            let foundProducts = [];
+            // Also append any newly added products from Admin Portal without erasing the 37 defaults
             if (typeof products !== 'undefined' && Array.isArray(products) && products.length > 0) {
-                foundProducts = products;
-            } else if (typeof defaultProducts !== 'undefined' && Array.isArray(defaultProducts)) {
-                foundProducts = defaultProducts;
+                const existingValues = Array.from(select.options).map(o => o.value);
+                let extraGroup = select.querySelector('optgroup[label="🆕 Newly Added"]');
+                
+                products.forEach(p => {
+                    if (p.isPublished !== false && !existingValues.includes(p.name)) {
+                        if (!extraGroup) {
+                            extraGroup = document.createElement('optgroup');
+                            extraGroup.label = "🆕 Newly Added";
+                            select.appendChild(extraGroup);
+                        }
+                        const opt = document.createElement('option');
+                        opt.value = p.name;
+                        opt.textContent = `${p.name} (₹${p.price}/${p.unit || 'kg'})`;
+                        extraGroup.appendChild(opt);
+                    }
+                });
             }
-
-            foundProducts.forEach(p => {
-                if (p.isPublished !== false) {
-                    const opt = document.createElement('option');
-                    opt.value = p.name;
-                    opt.textContent = `${p.name} (₹${p.price}/${p.unit || 'kg'})`;
-                    select.appendChild(opt);
-                }
-            });
         }
 
         function addPreOrderItem() {
