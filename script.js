@@ -746,3 +746,43 @@ window.addEventListener('storage', (e) => {
         refreshCurrentPageGrid();
     }
 });
+
+// Pre-Order Modal Functions
+function openPreOrderModal() {
+    const modal = document.getElementById('preOrderModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        // రేపటి తేదీని డిఫాల్ట్‌గా సెట్ చేయడం
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('poDate').value = tomorrow.toISOString().split('T')[0];
+    }
+}
+
+function closePreOrderModal() {
+    const modal = document.getElementById('preOrderModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function submitPreOrder(event) {
+    event.preventDefault();
+    
+    const booking = {
+        id: 'PO-' + Date.now(),
+        name: document.getElementById('poName').value,
+        phone: document.getElementById('poPhone').value,
+        date: document.getElementById('poDate').value,
+        slot: document.getElementById('poSlot').value,
+        items: document.getElementById('poItems').value,
+        bookedAt: new Date().toLocaleString()
+    };
+
+    // LocalStorage లో సేవ్ చేయడం (Admin Portal లో చూసుకోవడానికి)
+    let preOrders = JSON.parse(localStorage.getItem('sasyaPreOrders')) || [];
+    preOrders.push(booking);
+    localStorage.setItem('sasyaPreOrders', JSON.stringify(preOrders));
+
+    alert(`ధన్యవాదాలు ${booking.name}! మీ Pre-Order (${booking.date} - ${booking.slot}) విజయవంతంగా నమోదైంది.`);
+    document.getElementById('preOrderForm').reset();
+    closePreOrderModal();
+}
