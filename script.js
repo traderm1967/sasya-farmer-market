@@ -537,7 +537,7 @@ function orderViaWhatsApp() {
 
     saveOrderToHistory({ name, address, phone });
 
-    let message = `*New Order - Sasya Farmer Market*%0A`;
+        let message = `*New Order - Ooru Santha*%0A`;
     message += `*Name:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A*Delivery Type:* ${deliveryType}%0A%0A*Items:*%0A`;
 
     let total = 0;
@@ -726,6 +726,9 @@ function getCurrentPageCategory() {
     if (path.includes('grain') || title.includes('grain')) return 'grains';
     if (path.includes('pulse') || title.includes('pulse')) return 'pulses';
     return 'home';
+    if (path.includes('oil') || title.includes('oil')) return 'oils';
+    if (path.includes('sweet') || title.includes('sweet')) return 'sweets';
+    
 }
 
 function refreshCurrentPageGrid() {
