@@ -134,5 +134,12 @@
     </footer>
 
     <script src="script.js?v=2026.13"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof renderCategoryPageProducts === "function") {
+                renderCategoryPageProducts("sweets");
+            }
+        });
+    </script>
 </body>
 </html>

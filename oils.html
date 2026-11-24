@@ -29,7 +29,6 @@
                 🛒 Cart (<span id="cart-count">0</span>)
             </button>
         </div>
-        
     </header>
 
     <!-- Category Navigation Bar -->
@@ -135,5 +134,12 @@
     </footer>
 
     <script src="script.js?v=2026.13"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof renderCategoryPageProducts === "function") {
+                renderCategoryPageProducts("oils");
+            }
+        });
+    </script>
 </body>
 </html>
