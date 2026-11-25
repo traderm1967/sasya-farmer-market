@@ -46,6 +46,28 @@ const defaultProducts = [
     { id: 405, name: "Mung Bean (Pesalu)", category: "pulses", price: 120, costPrice: 95, unit: "kg", image: "images/mung-bean.jpg", organic: true, stock: 18, isPublished: true },
     { id: 406, name: "Rajma", category: "pulses", price: 140, costPrice: 110, unit: "kg", image: "images/rajma.jpg", organic: true, stock: 10, isPublished: true },
     { id: 407, name: "Tuvar Dal (Kandi Pappu)", category: "pulses", price: 150, costPrice: 120, unit: "kg", image: "images/tuvar-dal.jpg", organic: false, stock: 25, isPublished: true }
+
+    // ===== 🛢️ OILS (ids 501-504) =====
+    // price = మీరు నిర్ణయించే ధర (unit: litre). stock = ఎన్ని ఉన్నాయి.
+    { id: 501, name: "Groundnut Oil (వేరుశనగ నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Groundnut_Oil.jpeg", organic: false, stock: 0, isPublished: true },
+    { id: 502, name: "Mustard Oil (ఆవ నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Mustard_Oil.jpeg", organic: false, stock: 0, isPublished: true },
+    { id: 503, name: "Sesame Oil - Nuvvula Nune (నువ్వుల నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Nuvvula_Nune.jpeg", organic: false, stock: 0, isPublished: true },
+    { id: 504, name: "Sunflower Oil (పొద్దుతిరుగుడు నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Sunflower_Oil.jpeg", organic: false, stock: 0, isPublished: true },
+
+    // ===== 🍬 SWEETS (ids 601-611) =====
+    // price = మీరు నిర్ణయించే ధర (unit: kg లేదా box). stock = ఎన్ని ఉన్నాయి.
+    { id: 601, name: "Ariselu (అరిసెలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Ariselu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 602, name: "Bandar Laddu (బందరు లడ్డు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Bandar_Laddu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 603, name: "Bobbatlu (బొబ్బట్లు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Bobbatlu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 604, name: "Burelu (బూరెలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Burelu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 605, name: "Kajjikayalu (కజ్జికాయలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Kajjikayalu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 606, name: "Kobari Achulu (కొబ్బరి అచ్చులు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Kobari_Achulu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 607, name: "Kobbari Kova (కొబ్బరి కోవా)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Kobbari_Kova.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 608, name: "Kobbari Undalu (కొబ్బరి ఉండలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Kobbari_Undalu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 609, name: "Nuvvula Undalu (నువ్వుల ఉండలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Nuvvula_Undalu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 610, name: "Putharekulu (పూతరేకులు)", category: "sweets", price: 0, costPrice: 0, unit: "box", image: "images/Putharekulu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 611, name: "Rava Laddu (రవ్వ లడ్డు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Rava_Laddu.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 612, name: "Sunundalu (సున్నుండలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Sunundalu.jpg", organic: false, stock: 0, isPublished: true }
 ];
 
 let products = [];
