@@ -49,10 +49,10 @@ const defaultProducts = [
 
     // ===== 🛢️ OILS (ids 501-504) =====
     // price = మీరు నిర్ణయించే ధర (unit: litre). stock = ఎన్ని ఉన్నాయి.
-    { id: 501, name: "Groundnut Oil (వేరుశనగ నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Groundnut Oil.jpeg", organic: false, stock: 0, isPublished: true },
-    { id: 502, name: "Mustard Oil (ఆవ నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Mustard_Oil.jpeg", organic: false, stock: 0, isPublished: true },
-    { id: 503, name: "Sesame Oil - Nuvvula Nune (నువ్వుల నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Nuvvula_Nune.jpeg", organic: false, stock: 0, isPublished: true },
-    { id: 504, name: "Sunflower Oil (పొద్దుతిరుగుడు నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Sunflower_Oil.jpeg", organic: false, stock: 0, isPublished: true },
+    { id: 501, name: "Groundnut Oil (వేరుశనగ నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Groundnut Oil.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 502, name: "Mustard Oil (ఆవ నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Mustard Oil.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 503, name: "Sesame Oil - Nuvvula Nune (నువ్వుల నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Nuvvula Nune.jpg", organic: false, stock: 0, isPublished: true },
+    { id: 504, name: "Sunflower Oil (పొద్దుతిరుగుడు నూనె)", category: "oils", price: 0, costPrice: 0, unit: "litre", image: "images/Sunflower Oil.jpg", organic: false, stock: 0, isPublished: true },
 
     // ===== 🍬 SWEETS (ids 601-611) =====
     // price = మీరు నిర్ణయించే ధర (unit: kg లేదా box). stock = ఎన్ని ఉన్నాయి.
