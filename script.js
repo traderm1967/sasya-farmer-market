@@ -747,10 +747,9 @@ function getCurrentPageCategory() {
     if (path.includes('fruit') || title.includes('fruit')) return 'fruits';
     if (path.includes('grain') || title.includes('grain')) return 'grains';
     if (path.includes('pulse') || title.includes('pulse')) return 'pulses';
-    return 'home';
     if (path.includes('oil') || title.includes('oil')) return 'oils';
     if (path.includes('sweet') || title.includes('sweet')) return 'sweets';
-    
+    return 'home';
 }
 
 function refreshCurrentPageGrid() {
