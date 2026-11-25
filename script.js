@@ -45,7 +45,7 @@ const defaultProducts = [
     { id: 404, name: "Masoor Dal", category: "pulses", price: 90, costPrice: 70, unit: "kg", image: "images/masoor-dal.jpg", organic: false, stock: 20, isPublished: true },
     { id: 405, name: "Mung Bean (Pesalu)", category: "pulses", price: 120, costPrice: 95, unit: "kg", image: "images/mung-bean.jpg", organic: true, stock: 18, isPublished: true },
     { id: 406, name: "Rajma", category: "pulses", price: 140, costPrice: 110, unit: "kg", image: "images/rajma.jpg", organic: true, stock: 10, isPublished: true },
-    { id: 407, name: "Tuvar Dal (Kandi Pappu)", category: "pulses", price: 150, costPrice: 120, unit: "kg", image: "images/tuvar-dal.jpg", organic: false, stock: 25, isPublished: true }
+    { id: 407, name: "Tuvar Dal (Kandi Pappu)", category: "pulses", price: 150, costPrice: 120, unit: "kg", image: "images/tuvar-dal.jpg", organic: false, stock: 25, isPublished: true },
 
     // ===== 🛢️ OILS (ids 501-504) =====
     // price = మీరు నిర్ణయించే ధర (unit: litre). stock = ఎన్ని ఉన్నాయి.
@@ -67,7 +67,7 @@ const defaultProducts = [
     { id: 609, name: "Nuvvula Undalu (నువ్వుల ఉండలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Nuvvula_Undalu.jpg", organic: false, stock: 0, isPublished: true },
     { id: 610, name: "Putharekulu (పూతరేకులు)", category: "sweets", price: 0, costPrice: 0, unit: "box", image: "images/Putharekulu.jpg", organic: false, stock: 0, isPublished: true },
     { id: 611, name: "Rava Laddu (రవ్వ లడ్డు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Rava_Laddu.jpg", organic: false, stock: 0, isPublished: true },
-    { id: 612, name: "Sunundalu (సున్నుండలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Sunundalu.jpg", organic: false, stock: 0, isPublished: true }
+    { id: 612, name: "Sunundalu (సున్నుండలు)", category: "sweets", price: 0, costPrice: 0, unit: "kg", image: "images/Sunundalu.jpg", organic: false, stock: 0, isPublished: true },
 ];
 
 let products = [];
